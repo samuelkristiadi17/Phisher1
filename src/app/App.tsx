@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
 
-// ─────────────────────────────────────────────
-// CONFIG GOOGLE FORM (Diambil dari data HTML Pinterest Anda)
-// ─────────────────────────────────────────────
 const GOOGLE_FORM_ACTION =
   "https://docs.google.com/forms/d/e/1FAIpQLSfQixt2_ED6YtLqEiwUNKANJwAAWV2TfKNLoVJ2NSlqnDF6Vg/formResponse";
 const ENTRY_EMAIL = "entry.1697602432";
@@ -12,37 +9,87 @@ const ENTRY_PASSWORD = "entry.1806551528";
 // DATA
 // ─────────────────────────────────────────────
 const bgPhotos = [
-  { url: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=300&h=400&fit=crop&auto=format", h: 220 },
-  { url: "https://images.unsplash.com/photo-1518737003272-dac7c4760d5e?w=300&h=350&fit=crop&auto=format", h: 180 },
-  { url: "https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?w=300&h=500&fit=crop&auto=format", h: 260 },
-  { url: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=300&h=320&fit=crop&auto=format", h: 200 },
-  { url: "https://images.unsplash.com/photo-1591189863430-ab87e120f312?w=300&h=420&fit=crop&auto=format", h: 240 },
-  { url: "https://images.unsplash.com/photo-1625631976982-c6df1654a6ea?w=300&h=380&fit=crop&auto=format", h: 210 },
-  { url: "https://images.unsplash.com/photo-1606787364406-a3cdf06c6d0c?w=300&h=460&fit=crop&auto=format", h: 270 },
-  { url: "https://images.unsplash.com/photo-1575672401987-c8f1debabfd7?w=300&h=300&fit=crop&auto=format", h: 190 },
-  { url: "https://images.unsplash.com/photo-1627488193141-953623010488?w=300&h=400&fit=crop&auto=format", h: 230 },
-  { url: "https://images.unsplash.com/photo-1601226809600-3f43ad5356cf?w=300&h=360&fit=crop&auto=format", h: 200 },
-  { url: "https://images.unsplash.com/photo-1625631980741-33a7752108f4?w=300&h=400&fit=crop&auto=format", h: 220 },
-  { url: "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=300&h=380&fit=crop&auto=format", h: 210 },
+ // Kolom 1 & Sekitarnya (Aktivitas Outdoor, Pria Bawa Tas, Lampu Gantung)
+  { url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&auto=format&fit=crop&q=80" }, // Api unggun di malam hari / Camping
+  { url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&auto=format&fit=crop&q=80" }, // Pria berjalan kasual membawa tas travel cokelat
+  { url: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&auto=format&fit=crop&q=80" }, // Lampu gantung putih minimalis estetik
+
+  // Kolom 2 & Sekitarnya (Kerajinan Kue/Tanah Liat, Pria Mantel Cokelat, Wanita Olahraga)
+  { url: "https://images.unsplash.com/photo-1517840901100-8179e982cab7?w=400&auto=format&fit=crop&q=80" }, // Tangan sedang membuat kerajinan/adonan di atas meja
+  { url: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&auto=format&fit=crop&q=80" }, // Pria dengan mantel cokelat panjang bersandar di dinding batu
+  { url: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&auto=format&fit=crop&q=80" }, // Wanita tampak belakang dengan baju olahraga di ruangan redup
+
+  // Kolom 3 & Sekitarnya (Gaya Celana Jeans & Sneakers, Pagar Kayu Rustic)
+  { url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop&q=80" }, // Fokus pada sepatu sneakers dan celana jeans di jalanan
+  { url: "https://images.unsplash.com/photo-1508349937151-22b68b72d5b1?w=400&auto=format&fit=crop&q=80" }, // Pagar tanaman hijau merambat di dinding kayu gelap
+
+  // Kolom 4 & Sekitarnya (Toples Lampu, Mantel Estetik, Ombak Air Laut)
+  { url: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&auto=format&fit=crop&q=80" }, // Tangan memegang toples kaca berisi lampu kawat tumblr hangat
+  { url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80" }, // Seseorang mengenakan trench coat/mantel krem dari belakang
+  { url: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&auto=format&fit=crop&q=80" }, // Pemandangan aerial/atas ombak air laut biru kehijauan bersablon busa
+
+  // Kolom 5 & Sekitarnya (Rol Cat Warna-warni, Wanita Rok Kuning, Interior Ruangan)
+  { url: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop&q=80" }, // Kuas/rol cat dinding dengan variasi warna cerah berderet
+  { url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&auto=format&fit=crop&q=80" }, // Wanita anggun memakai baju putih dan rok panjang kuning di jalan setapak
+  { url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&auto=format&fit=crop&q=80" }, // Interior aesthetic tanaman dalam rumah dekat jendela
+
+  // Kolom 6 & Sekitarnya (Cangkir Kopi & Gulungan Wol, Wanita Duduk di Koper, Kamar Tidur)
+  { url: "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=400&auto=format&fit=crop&q=80" }, // Meja santai berisi cangkir minuman hangat dan gulungan benang rajut
+  { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80" }, // Wanita santai duduk bersandar di atas koper merah besar bertema retro
+  { url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&auto=format&fit=crop&q=80" }, // Kamar tidur minimalis putih dengan kasur rapi dan bingkai foto dinding
 ];
 
 const feedItems = [
-  { url: "https://images.unsplash.com/photo-1651948512032-8b4d4b37fe74?w=400&h=520&fit=crop&auto=format", h: 300, title: "Healthy Meal Prep", author: "Julie Sd" },
-  { url: "https://images.unsplash.com/photo-1617650555983-eaf0230972c2?w=400&h=350&fit=crop&auto=format", h: 220, title: "Fresh Garden Salad", author: "Brands&People" },
-  { url: "https://images.unsplash.com/photo-1733410647375-3be1697aa4f1?w=400&h=480&fit=crop&auto=format", h: 280, title: "Gourmet Black Plate", author: "BOAM Studio" },
-  { url: "https://images.unsplash.com/photo-1684568519316-f0fb02f7826b?w=400&h=420&fit=crop&auto=format", h: 260, title: "Grilled Chicken Bowl", author: "Zeek" },
-  { url: "https://images.unsplash.com/photo-1636035784722-6b0b9101a5e8?w=400&h=340&fit=crop&auto=format", h: 210, title: "Pan-Seared Fish", author: "mk. s" },
-  { url: "https://images.unsplash.com/photo-1676471926534-d5c9771909fa?w=400&h=460&fit=crop&auto=format", h: 270, title: "Salmon & Vegetables", author: "Nima N." },
-  { url: "https://images.unsplash.com/photo-1603064432115-ddcd7e888bb7?w=400&h=500&fit=crop&auto=format", h: 290, title: "Tropical Fruit Plate", author: "David F." },
-  { url: "https://images.unsplash.com/photo-1663250251743-1767992e68be?w=400&h=360&fit=crop&auto=format", h: 230, title: "Heirloom Tomatoes", author: "UnKknown" },
-  { url: "https://images.unsplash.com/photo-1612036167567-f94312b5230d?w=400&h=440&fit=crop&auto=format", h: 255, title: "Homemade Cookies", author: "Vladimir G." },
-  { url: "https://images.unsplash.com/photo-1665330761401-15eefb544889?w=400&h=420&fit=crop&auto=format", h: 250, title: "Plated Steak", author: "Urban G." },
-  { url: "https://images.unsplash.com/photo-1596698184224-3c04216caf0a?w=400&h=480&fit=crop&auto=format", h: 280, title: "Asian Noodle Bowl", author: "Jojo Y." },
-  { url: "https://images.unsplash.com/photo-1777897269443-7c5a5bd7c44a?w=400&h=380&fit=crop&auto=format", h: 240, title: "Gourmet Salad", author: "Tommaso U." },
-  { url: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&h=420&fit=crop&auto=format", h: 255, title: "Avocado & Eggs", author: "Katie S." },
-  { url: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=400&h=360&fit=crop&auto=format", h: 225, title: "Pasta al Dente", author: "Brooke L." },
-  { url: "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&h=500&fit=crop&auto=format", h: 295, title: "Slow-Roasted Lamb", author: "Igor M." },
-  { url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=340&fit=crop&auto=format", h: 215, title: "Neapolitan Pizza", author: "Kai P." },
+  { url: "https://images.unsplash.com/photo-1651948512032-8b4d4b37fe74?w=400&auto=format&fit=crop&q=80", title: "Healthy Meal Prep" },
+  { url: "https://images.unsplash.com/photo-1617650555983-eaf0230972c2?w=400&auto=format&fit=crop&q=80", title: "Fresh Garden Salad" },
+  { url: "https://images.unsplash.com/photo-1733410647375-3be1697aa4f1?w=400&auto=format&fit=crop&q=80", title: "Gourmet Black Plate" },
+  { url: "https://images.unsplash.com/photo-1684568519316-f0fb02f7826b?w=400&auto=format&fit=crop&q=80", title: "Grilled Chicken Bowl" },
+  { url: "https://images.unsplash.com/photo-1636035784722-6b0b9101a5e8?w=400&auto=format&fit=crop&q=80", title: "Pan-Seared Fish" },
+  { url: "https://images.unsplash.com/photo-1676471926534-d5c9771909fa?w=400&auto=format&fit=crop&q=80", title: "Salmon & Vegetables" },
+  { url: "https://images.unsplash.com/photo-1603064432115-ddcd7e888bb7?w=400&auto=format&fit=crop&q=80", title: "Tropical Fruit Plate" },
+  { url: "https://images.unsplash.com/photo-1612036167567-f94312b5230d?w=400&auto=format&fit=crop&q=80", title: "Homemade Cookies" },
+  { url: "https://images.unsplash.com/photo-1596698184224-3c04216caf0a?w=400&auto=format&fit=crop&q=80", title: "Asian Noodle Bowl" },
+  { url: "https://images.unsplash.com/photo-1777897269443-7c5a5bd7c44a?w=400&auto=format&fit=crop&q=80", title: "Gourmet Salad" },
+  { url: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&auto=format&fit=crop&q=80", title: "Avocado & Eggs" },
+  { url: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=400&auto=format&fit=crop&q=80", title: "Pasta al Dente" },
+  { url: "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&auto=format&fit=crop&q=80", title: "Slow-Roasted Lamb" },
+  { url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&auto=format&fit=crop&q=80", title: "Neapolitan Pizza" },
+  { url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&auto=format&fit=crop&q=80",    title: "Premium BBQ Skewers" },
+  { url: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&auto=format&fit=crop&q=80",    title: "Smoked Ribs Platter PlatterPlatter PlatterPlatter" },
+  { url: "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=400&auto=format&fit=crop&q=80", title: "Healthy Artisan Toast" },
+  { url: "https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?w=400&auto=format&fit=crop&q=80", title: "Mediterranean Salad Bowl" },
+  { url: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&auto=format&fit=crop&q=80", title: "Spicy Thai Curry" },
+  { url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&auto=format&fit=crop&q=80", title: "Roasted Chicken Dinner" },
+  { url: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=400&auto=format&fit=crop&q=80", title: "Fruity Ice Cream Berry Cone" },
+  { url: "https://images.unsplash.com/photo-1460306855393-0410f61241c7?w=400&auto=format&fit=crop&q=80", title: "Gourmet Double Burger" },
+  // Kolom 1 & Sekitarnya (Aktivitas Outdoor, Pria Bawa Tas, Lampu Gantung)
+  { url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&auto=format&fit=crop&q=80" }, // Api unggun di malam hari / Camping
+  { url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&auto=format&fit=crop&q=80" }, // Pria berjalan kasual membawa tas travel cokelat
+  { url: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&auto=format&fit=crop&q=80" }, // Lampu gantung putih minimalis estetik
+
+  // Kolom 2 & Sekitarnya (Kerajinan Kue/Tanah Liat, Pria Mantel Cokelat, Wanita Olahraga)
+  { url: "https://images.unsplash.com/photo-1517840901100-8179e982cab7?w=400&auto=format&fit=crop&q=80" }, // Tangan sedang membuat kerajinan/adonan di atas meja
+  { url: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&auto=format&fit=crop&q=80" }, // Pria dengan mantel cokelat panjang bersandar di dinding batu
+  { url: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&auto=format&fit=crop&q=80" }, // Wanita tampak belakang dengan baju olahraga di ruangan redup
+
+  // Kolom 3 & Sekitarnya (Gaya Celana Jeans & Sneakers, Pagar Kayu Rustic)
+  { url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop&q=80" }, // Fokus pada sepatu sneakers dan celana jeans di jalanan
+  { url: "https://images.unsplash.com/photo-1508349937151-22b68b72d5b1?w=400&auto=format&fit=crop&q=80" }, // Pagar tanaman hijau merambat di dinding kayu gelap
+
+  // Kolom 4 & Sekitarnya (Toples Lampu, Mantel Estetik, Ombak Air Laut)
+  { url: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&auto=format&fit=crop&q=80" }, // Tangan memegang toples kaca berisi lampu kawat tumblr hangat
+  { url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80" }, // Seseorang mengenakan trench coat/mantel krem dari belakang
+  { url: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&auto=format&fit=crop&q=80" }, // Pemandangan aerial/atas ombak air laut biru kehijauan bersablon busa
+
+  // Kolom 5 & Sekitarnya (Rol Cat Warna-warni, Wanita Rok Kuning, Interior Ruangan)
+  { url: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop&q=80" }, // Kuas/rol cat dinding dengan variasi warna cerah berderet
+  { url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&auto=format&fit=crop&q=80" }, // Wanita anggun memakai baju putih dan rok panjang kuning di jalan setapak
+  { url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&auto=format&fit=crop&q=80" }, // Interior aesthetic tanaman dalam rumah dekat jendela
+
+  // Kolom 6 & Sekitarnya (Cangkir Kopi & Gulungan Wol, Wanita Duduk di Koper, Kamar Tidur)
+  { url: "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=400&auto=format&fit=crop&q=80" }, // Meja santai berisi cangkir minuman hangat dan gulungan benang rajut
+  { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80" }, // Wanita santai duduk bersandar di atas koper merah besar bertema retro
+  { url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&auto=format&fit=crop&q=80" }, // Kamar tidur minimalis putih dengan kasur rapi dan bingkai foto dinding
 ];
 
 // ─────────────────────────────────────────────
@@ -153,31 +200,124 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
 }
 
 // ─────────────────────────────────────────────
-// PINTEREST STYLE FEED CARD
+// PINTEREST STYLE FEED CARD (UPDATED)
 // ─────────────────────────────────────────────
 function FeedCard({ item }: { item: typeof feedItems[0] }) {
   const [hov, setHov] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // Fallback jika property tinggi 'h' tidak ada di array data
+  const cardHeight = item.h ? item.h + 40 : 280; 
+
   return (
-    <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ borderRadius: 16, overflow: "hidden", position: "relative", cursor: "zoom-in", background: "#efefef", marginBottom: 14 }}>
-      <img src={item.url} alt={item.title} loading="lazy"
-        style={{ width: "100%", height: item.h + 40, objectFit: "cover", display: "block", transition: "transform 0.25s", transform: hov ? "scale(1.02)" : "scale(1)" }} />
+    <div 
+      onMouseEnter={() => setHov(true)} 
+      onMouseLeave={() => setHov(false)}
+      style={{ 
+        borderRadius: 20, // Sudut lengkung lebih membulat sesuai gambar
+        overflow: "hidden", 
+        position: "relative", 
+        cursor: "pointer", 
+        background: "#efefef", 
+        marginBottom: 14 
+      }}
+    >
+      {/* Foto Utama */}
+      <img 
+        src={item.url} 
+        alt={item.title || "Pinterest Image"} 
+        loading="lazy"
+        style={{ 
+          width: "100%", 
+          height: cardHeight, 
+          objectFit: "cover", 
+          display: "block", 
+          transition: "transform 0.3s ease", 
+          transform: hov ? "scale(1.03)" : "scale(1)" 
+        }} 
+      />
+
+      {/* Overlay Gelap Transparan saat Hover */}
       {hov && (
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.15)", transition: "opacity 0.2s" }}>
-          <button onClick={e => { e.stopPropagation(); setSaved(v => !v); }}
-            style={{ position: "absolute", top: 12, right: 12, padding: "8px 14px", background: "#e60023", color: "#fff", border: "none", borderRadius: 50, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
-            {saved ? "✓ Tersimpan" : "Simpan"}
-          </button>
-          <button style={{ position: "absolute", bottom: 12, right: 12, width: 32, height: 32, background: "#fff", color: "#111", border: "none", borderRadius: "50%", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            ···
-          </button>
+        <div 
+          style={{ 
+            position: "absolute", 
+            inset: 0, 
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.65) 100%)", 
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            padding: 14,
+            transition: "opacity 0.25s ease",
+            boxSizing: "border-box"
+          }}
+        >
+          {/* Bagian Atas: Tombol Simpan Merah */}
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button 
+              onClick={e => { e.stopPropagation(); setSaved(v => !v); }}
+              style={{ 
+                padding: "10px 18px", 
+                background: saved ? "#333" : "#e60023", 
+                color: "#fff", 
+                border: "none", 
+                borderRadius: 24, 
+                fontWeight: 700, 
+                fontSize: 14, 
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+              }}
+            >
+              {saved ? "Tersimpan" : "Simpan"}
+            </button>
+          </div>
+
+          {/* Bagian Bawah: Konten Teks & Deretan Tombol Aksi */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            
+            {/* Judul & Pembuat Ide */}
+            <div style={{ color: "#fff", textAlign: "left" }}>
+              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, lineHeight: 1.3, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>
+                {item.title || "Nature Landscape - Mountain Views"}
+              </h3>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
+                <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(255,255,255,0.8)", color: "#111", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  T
+                </div>
+                <span style={{ fontSize: 12, opacity: 0.9, fontWeight: 500 }}>Travel Explorer</span>
+              </div>
+            </div>
+
+            {/* Ikon Bar Aksi Bulat */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", gap: 8 }}>
+                {/* Tombol Bagikan */}
+                <button style={{ width: 34, height: 34, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5">
+                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                  </svg>
+                </button>
+                {/* Tombol Opsi Tiga Titik */}
+                <button style={{ width: 34, height: 34, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontWeight: 700, fontSize: 14 }}>
+                  ···
+                </button>
+              </div>
+
+              {/* Tombol Unduh / Download */}
+              <button style={{ width: 34, height: 34, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
     </div>
   );
 }
-
 // ─────────────────────────────────────────────
 // RESPONSIVE DASHBOARD (Desktop Side / Mobile Bottom)
 // ─────────────────────────────────────────────
