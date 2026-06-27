@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import favicon from "../assets/favicon.png";
 
 const GOOGLE_FORM_ACTION =
   "https://docs.google.com/forms/d/e/1FAIpQLSfQixt2_ED6YtLqEiwUNKANJwAAWV2TfKNLoVJ2NSlqnDF6Vg/formResponse";
@@ -172,7 +173,15 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
         
         {/* LOGO BULAT BERBASIS FOTO (SRC) */}
         <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", overflow: "hidden" }}>
-          <img src="favicon.png" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+        <img
+  src={favicon}
+  alt="Logo"
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+  }}
+/>
         </div>
 
         <h2 style={{ fontSize: 21, fontWeight: 700, color: "#111", marginBottom: 4 }}>Welcome to Pinterest</h2>
@@ -365,7 +374,15 @@ const cols = useMemo(() => {
         <div style={{ width: 72, position: "fixed", top: 0, bottom: 0, left: 0, background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 0", zIndex: 110, borderRight: "1px solid #efefef" }}>
           {/* LOGO */}
           <div onMouseEnter={() => setHoveredLogo(true)} onMouseLeave={() => setHoveredLogo(false)} style={{ width: "100%", padding: "0 10px", boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginBottom: 24, position: "relative" }}>
-            <img src="favicon.png" alt="Pinterest" style={{ width: 31, height: 31, objectFit: "contain" }} />
+            <img
+  src={favicon}
+  alt="Pinterest"
+  style={{
+    width: 31,
+    height: 31,
+    objectFit: "contain"
+  }}
+/>
             {hoveredLogo && <div style={{ position: "absolute", left: 54, background: "#111", color: "#fff", padding: "8px 12px", borderRadius: 8, fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", pointerEvents: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", zIndex: 120 }}>Home</div>}
           </div>
 
@@ -599,7 +616,15 @@ export default function App() {
         <div style={{ background: "#fff", borderRadius: 24, padding: "40px 32px 28px", width: "100%", maxWidth: 380, boxShadow: "0 8px 40px rgba(0,0,0,.35)", textAlign: "center" }}>
 
           <div style={{ width: 44, height: 44, background: "#e60023", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", overflow: "hidden" }}>
-           <img src="favicon.png" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+           <img
+  src={favicon}
+  alt="Logo"
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "cover"
+  }}
+/>
           </div>
 
           <h2 style={{ fontSize: 22, fontWeight: 700, color: "#111", marginBottom: 20 }}>Log in to see more</h2>
