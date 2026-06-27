@@ -1,7 +1,7 @@
 
-  # Meal Planning App
+  # Project PhishSim - Phishing Simulation
 
-  This is a code bundle for Meal Planning App. The original project is available at https://www.figma.com/design/O2FBLiNkvbiFXn6yUZiD5X/Meal-Planning-App.
+  This is a code bundle for PhishSim - Phishing Simulation. The original project is available at https://www.figma.com/design/O2FBLiNkvbiFXn6yUZiD5X/Meal-Planni
 
   ## Running the code
 
