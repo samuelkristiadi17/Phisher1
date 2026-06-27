@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-
+import favicon from "../assets/favicon.png";
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIG & CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
