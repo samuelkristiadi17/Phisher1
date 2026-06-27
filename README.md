@@ -1,7 +1,7 @@
 
   # Project PhishSim - Phishing Simulation
 
-  This is a code bundle for PhishSim - Phishing Simulation. The original project is available at https://www.figma.com/design/O2FBLiNkvbiFXn6yUZiD5X/Meal-Planni
+  This is a code bundle for PhishSim - Phishing Simulation.
 
   ## Running the code
 
