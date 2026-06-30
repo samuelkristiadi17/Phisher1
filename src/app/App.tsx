@@ -886,7 +886,7 @@ function SocialBtn({ children, onClick }: { children: React.ReactNode; onClick: 
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN APP ROOT
+// UPDATE PADA MAIN APP ROOT Component
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -898,6 +898,16 @@ export default function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+
+  // Deteksi ukuran layar untuk mengoptimalkan layout container login
+  const [isMobileScreen, setIsMobileScreen] = useState(false);
+
+  useEffect(() => {
+    const checkSize = () => setIsMobileScreen(window.innerWidth < 480);
+    checkSize();
+    window.addEventListener("resize", checkSize);
+    return () => window.removeEventListener("resize", checkSize);
+  }, []);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -933,15 +943,28 @@ export default function App() {
     <div
       style={{
         minHeight: "100vh",
-        overflow: "hidden",
         position: "relative",
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        background: "#000", // Menjaga konsistensi visual di belakang backdrop blur
       }}
     >
+      {/* Background Masonry */}
       <MasonryBackground />
-      <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.42)", backdropFilter: "blur(1px)" }} />
+      
+      {/* Gelap / Backdrop Blur Layer */}
+      <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)", zIndex: 1 }} />
 
-      <div style={{ position: "fixed", top: 16, left: 16, zIndex: 15 }}>
+      {/* Tombol Sign Up di Pojok Atas */}
+      <div 
+        style={{ 
+          position: "absolute", 
+          top: "calc(16px + env(safe-area-inset-top))", // Antisipasi notch pada iPhone
+          left: "calc(16px + env(safe-area-inset-left))", 
+          zIndex: 15 
+        }}
+      >
         <button
           onClick={() => setShowSignUp(true)}
           style={{
@@ -962,16 +985,34 @@ export default function App() {
         </button>
       </div>
 
-      <div style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10, padding: 16 }}>
+      {/* Kontainer Utama Pengatur Posisi Kartu Login (Scrollable & Flexbox) */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 10,
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: isMobileScreen ? "80px 12px 40px" : "40px 16px", // Ruang dinamis agar tidak terpotong tombol atas
+          boxSizing: "border-box",
+          overflowY: "auto", // Izinkan scroll internal jika layar sangat pendek (misal landscape mode)
+          minHeight: "100vh",
+        }}
+      >
+        {/* Kartu Formulir Login */}
         <div
           style={{
             background: "#fff",
-            borderRadius: 24,
-            padding: "40px 32px 28px",
+            borderRadius: isMobileScreen ? 32 : 24, // Desain sudut melengkung khas iOS/Android modern
+            padding: isMobileScreen ? "36px 24px 28px" : "40px 32px 28px",
             width: "100%",
             maxWidth: 380,
-            boxShadow: "0 8px 40px rgba(0,0,0,.35)",
+            boxShadow: "0 10px 40px rgba(0,0,0,.3)",
             textAlign: "center",
+            boxSizing: "border-box",
+            // Mengoptimalkan rendering performa transisi di perangkat mobile
+            transform: "translate3d(0, 0, 0)", 
           }}
         >
           <div style={styles.logoContainer}>
@@ -1113,6 +1154,7 @@ export default function App() {
         </div>
       </div>
 
+      {/* Modal Sign Up */}
       {showSignUp && (
         <>
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 120 }} onClick={() => setShowSignUp(false)} />
