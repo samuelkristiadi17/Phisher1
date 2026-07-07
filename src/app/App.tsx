@@ -359,7 +359,7 @@ function LandingPage({
 
     <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", gap: 12, width: "100%" }}>
       <button onClick={() => onNav("login")} style={{ background: "#e60023", color: "#fff", border: "none", padding: "14px 24px", borderRadius: 24, fontSize: 16, fontWeight: 700, cursor: "pointer", width: isMobile ? "100%" : "auto" }}>Join Pinterest for free</button>
-      <button onClick={() => onNav("signup")} style={{ background: "#e9e9e9", color: "#111", border: "none", padding: "14px 24px", borderRadius: 24, fontSize: 16, fontWeight: 700, cursor: "pointer", width: isMobile ? "100%" : "auto" }}>I already have an account</button>
+      <button onClick={() => onNav("#")} style={{ background: "#e9e9e9", color: "#111", border: "none", padding: "14px 24px", borderRadius: 24, fontSize: 16, fontWeight: 700, cursor: "pointer", width: isMobile ? "100%" : "auto" }}>I already have an account</button>
     </div>
   </div>
 
