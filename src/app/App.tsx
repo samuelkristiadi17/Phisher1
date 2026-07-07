@@ -1014,7 +1014,11 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} style={{ position: "absolute", top: 16, right: 18, background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#767676" }}>✕</button>
         
         <div style={{ ...styles.logoContainer, margin: "0 auto 16px" }}>
-          <div style={{ color: "#fff", fontWeight: "bold", fontSize: 22, fontFamily: "system-ui" }}>P</div>
+          <img 
+            src={favicon} 
+            alt="Pinterest Logo" 
+            style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+          />
         </div>
         
         <h2 style={{ fontSize: isMobile ? 22 : 24, fontWeight: 700, color: "#111", marginBottom: 24, letterSpacing: "-0.5px" }}>
