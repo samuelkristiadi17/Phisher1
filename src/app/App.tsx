@@ -271,7 +271,7 @@ function LandingPage({
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 670, fontSize: 20, color: "#e60023", cursor: "pointer", letterSpacing: "-0.5px" }}>
             <div style={{ height: isMobile ? 24 : 32, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent" }}>
               <img 
-                src={favicon} 
+                src={logo} 
                 alt="Pinterest Logo" 
                 style={{ height: isMobile ? "100%" : "72%", width: isMobile ? "auto" : "1", objectFit: "contain" }} 
               />
@@ -1014,7 +1014,7 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} style={{ position: "absolute", top: 16, right: 18, background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#767676" }}>✕</button>
         
         <div style={{ ...styles.logoContainer, margin: "0 auto 16px" }}>
-          <img 
+        <img 
             src={favicon} 
             alt="Pinterest Logo" 
             style={{ width: "100%", height: "100%", objectFit: "cover" }} 
