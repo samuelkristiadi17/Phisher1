@@ -976,7 +976,7 @@ function LandingPage({
               </p>
             </div>
 
-            <div style={{ background: "#e1e1e1", padding: "16px", fontSize: 14, fontWeight: 700, color: "#111", borderTop: "1px solid #cdcdd1", cursor: "pointer", marginTop: "auto" }}>
+            <div style={{ background: "#ffffff", padding: "16px", fontSize: 14, fontWeight: 700, color: "#111", borderTop: "1px solid #cdcdd1", cursor: "pointer", marginTop: "auto" }}>
               Create a free business account
             </div>
           </div>
