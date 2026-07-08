@@ -255,63 +255,94 @@ function LandingPage({
   return (
     <div style={{ background: "#fff", color: "#111", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: "hidden" }}>
       
-      {/* 1. FIXED & STICKY NAVBAR */}
-      <header style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "space-between", 
-        padding: isMobile ? "12px 16px" : "16px 40px", 
-        position: "fixed", 
-        top: 0, left: 0, right: 0,
-        background: "rgb(255, 255, 255)", 
-        borderBottom: "1px solid rgba(0,0,0,0.05)",
-        zIndex: 150 
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 670, fontSize: 20, color: "#e60023", cursor: "pointer", letterSpacing: "-0.5px" }}>
-            <div style={{ height: isMobile ? 24 : 32, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent" }}>
-              <img 
-                src={logo} 
-                alt="Pinterest Logo" 
-                style={{ height: isMobile ? "100%" : "72%", width: isMobile ? "auto" : "1", objectFit: "contain" }} 
-              />
-            </div>
-          </div>
+     {/* 1. FIXED & STICKY NAVBAR */}
+<header style={{ 
+  display: "flex", 
+  alignItems: "center", 
+  justifyContent: "space-between", 
+  padding: isMobile ? "12px 16px" : "16px 40px", 
+  position: "fixed", 
+  top: 0, left: 0, right: 0,
+  background: "rgb(255, 255, 255)", 
+  borderBottom: "1px solid rgba(0,0,0,0.05)",
+  zIndex: 150 
+}}>
+  <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 670, fontSize: 20, color: "#e60023", cursor: "pointer", letterSpacing: "-0.5px" }}>
+      <div style={{ height: isMobile ? 24 : 32, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent" }}>
+        <img 
+          src={logo} 
+          alt="Pinterest Logo" 
+          style={{ height: isMobile ? "100%" : "72%", width: isMobile ? "auto" : "1", objectFit: "contain" }} 
+        />
+      </div>
+    </div>
+    
+    {!isMobile && (
+      <>
+        <span style={{ fontSize: 16, fontWeight: 600, cursor: "pointer", marginLeft: 8 }}>Explore</span>
+        {/* === PENYESUAIAN KONTAINER SEARCH BAR === */}
+        <div 
+          onClick={() => onNav("login")} // Langsung menuju ke login page saat di click
+          style={{ 
+            flex: 1, 
+            // Panjang disesuaikan merentang dari 'Explore' mendekati menu kanan
+            maxWidth: isMobile ? "90%" : 960, 
+            position: "relative", 
+            display: "flex", 
+            alignItems: "center",
+            cursor: "pointer",
+            zIndex: 1
+          }}
+        >
+          {/* Ikon Pencarian SVG */}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767676" strokeWidth="3.5" style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", zIndex: 2 }}>
+            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+          </svg>
           
-          {!isMobile && (
-            <>
-              <span style={{ fontSize: 16, fontWeight: 600, cursor: "pointer", marginLeft: 8 }}>Explore</span>
-              <div style={{ flex: 1, maxWidth: 595, position: "relative", display: "flex", alignItems: "center" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767676" strokeWidth="3.5" style={{ position: "absolute", left: 16 }}>
-                  <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-                </svg>
-                <input placeholder="Search for easy dinners, fashion, etc." style={{ width: "100%", padding: "12px 16px 12px 46px", background: "#f1f1f1", border: "none", borderRadius: 15, fontSize: 15, outline: "none", color: "#111" }} disabled />
-              </div>
-            </>
-          )}
+          {/* === PENYESUAIAN BENTUK INPUT === */}
+          <input 
+            placeholder="Search for easy dinners, fashion, etc." 
+            style={{ 
+              width: "100%", 
+              // Padding kiri disesuaikan agar teks tidak menimpa ikon
+              padding: "12px 16px 12px 46px", 
+              background: "#f1f1f1", 
+              border: "none", 
+              // Kelengkungan bulat yang ramping, persis seperti di foto
+              borderRadius: 20, 
+              fontSize: 15, 
+              outline: "none", 
+              color: "#111",
+              cursor: "pointer"
+            }} 
+            readOnly // readOnly agar onClick bisa dipicu, user tidak bisa mengetik langsung
+          />
         </div>
-        
-        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 24, fontSize: 16, fontWeight: 600, marginLeft: isMobile ? 0 : 16 }}>
-          {!isMobile && (
-            <>
-              <span style={{ cursor: "pointer", color: "#111" }}>About</span>
-              <span style={{ cursor: "pointer", color: "#111" }}>Businesses</span>
-              <span style={{ cursor: "pointer", color: "#111" }}>Create</span>
-              <span style={{ cursor: "pointer", color: "#111" }}>News</span>
-            </>
-          )}
-          <button onClick={() => onNav("login")} style={{ background: "#e60023", color: "#fff", border: "none", padding: isMobile ? "10px 18px" : "12px 22px", borderRadius: 24, fontWeight: 700, fontSize: isMobile ? 14 : 15, cursor: "pointer" }}>Log in</button>
-          {isMobile ? (
-            <button style={{ background: "none", border: "none", display: "flex", alignItems: "center", cursor: "pointer", padding: 0 }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
-          ) : (
-            <button onClick={() => onNav("signup")} style={{ background: "#efefef", color: "#111", border: "none", padding: "12px 22px", borderRadius: 24, fontWeight: 700, fontSize: 15, cursor: "pointer" }}>Sign up</button>
-          )}
-        </div>
-      </header>
+      </>
+    )}
+  </div>
+  
+  <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 24, fontSize: 16, fontWeight: 600, marginLeft: isMobile ? 0 : 24 }}>
+    {!isMobile && (
+      <>
+        <span style={{ cursor: "pointer", color: "#111" }}>About</span>
+        <span style={{ cursor: "pointer", color: "#111" }}>Businesses</span>
+        <span style={{ cursor: "pointer", color: "#111" }}>Create</span>
+      </>
+    )}
+    <button onClick={() => onNav("login")} style={{ background: "#e60023", color: "#fff", border: "none", padding: isMobile ? "10px 18px" : "12px 22px", borderRadius: 24, fontWeight: 700, fontSize: isMobile ? 14 : 15, cursor: "pointer" }}>Log in</button>
+    {isMobile ? (
+      <button style={{ background: "none", border: "none", display: "flex", alignItems: "center", cursor: "pointer", padding: 0 }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    ) : (
+      <button onClick={() => onNav("signup")} style={{ background: "#efefef", color: "#111", border: "none", padding: "12px 22px", borderRadius: 24, fontWeight: 700, fontSize: 15, cursor: "pointer" }}>Sign up</button>
+    )}
+  </div>
+</header>
 
-      <div style={{ height: isMobile ? 56 : 80 }} />
+<div style={{ height: isMobile ? 56 : 80 }} />
       
 {/* 2. HERO MAIN CONTAINER */}
 <section style={{ 
@@ -348,7 +379,7 @@ function LandingPage({
       Create the life you love <br />on Pinterest
     </h1>
 
-    {/* KOLASE FOTO MOBILE (Muncul hanya di Mobile) */}
+    {/* KOLASE FOTO MOBILE (Tetap Utuh) */}
     {isMobile && (
        <div style={{ position: "relative", width: "100%", height: "260px", maxWidth: "340px" }}>
           <img src="https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=300" style={{ position: "absolute", top: 0, left: 0, width: "45%", height: "60%", borderRadius: 16, objectFit: "cover" }} alt="" />
@@ -363,17 +394,105 @@ function LandingPage({
     </div>
   </div>
 
-  {/* SISI KANAN: KOLASE DESKTOP (Hanya muncul di Desktop) */}
+  {/* SISI KANAN: KOLASE DESKTOP */}
   {!isMobile && (
-    <div style={{ flex: "1 1 500px", position: "relative", minHeight: 520, maxWidth: 580 }}>
-      <img src="https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=300" style={{ position: "absolute", top: 0, left: 20, width: 160, height: 130, borderRadius: 20, objectFit: "cover", boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }} alt="" />
-      <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400" style={{ position: "absolute", top: 60, left: 160, width: 260, height: 340, borderRadius: 28, objectFit: "cover", boxShadow: "0 16px 40px rgba(0,0,0,0.18)", zIndex: 3 }} alt="" />
-      <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?w=300" style={{ position: "absolute", top: 10, right: 10, width: 130, height: 150, borderRadius: 22, objectFit: "cover", boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }} alt="" />
-      <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300" style={{ position: "absolute", bottom: 20, left: 0, width: 190, height: 220, borderRadius: 24, objectFit: "cover", boxShadow: "0 8px 24px rgba(0,0,0,0.12)", zIndex: 2 }} alt="" />
-      <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300" style={{ position: "absolute", bottom: 0, right: 30, width: 200, height: 170, borderRadius: 24, objectFit: "cover", boxShadow: "0 8px 24px rgba(0,0,0,0.12)", zIndex: 2 }} alt="" />
+    <div style={{ 
+      flex: "1 1 500px", 
+      position: "relative", 
+      minHeight: 560, 
+      maxWidth: 600,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}>
+      {/* 1. Salad / Makanan (Kanan Bawah - Berada di bawah foto cewek) */}
+      <img 
+        src="https://images.unsplash.com/photo-1457089328109-e5d9bd499191?w=300" 
+        style={{ 
+          position: "absolute", 
+          bottom: "30px", // Naik sedikit agar tumpukan dengan foto cewek lebih kelihatan
+          right: "60px",  // Digeser agak ke kiri agar masuk di bawah foto cewek
+          width: 200, 
+          height: 170, 
+          borderRadius: 32, 
+          objectFit: "cover", 
+          boxShadow: "0 8px 24px rgba(0,0,0,0.08)", 
+          zIndex: 1       // Di lapisan terbawah
+        }} 
+        alt="Salad Makanan" 
+      />
+
+      {/* 2. Bunga Merah/Pink (Kiri Atas) */}
+      <img 
+        src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300" 
+        style={{ 
+          position: "absolute", 
+          top: "10px", 
+          left: "30px", 
+          width: 140, 
+          height: 140, 
+          borderRadius: 24, 
+          objectFit: "cover", 
+          boxShadow: "0 12px 28px rgba(0,0,0,0.15)",
+          zIndex: 4 // Diubah ke 4 agar menimpa tepi atas foto cewek
+        }} 
+        alt="Bunga" 
+      />
+
+      {/* 3. Kaktus (Kanan Atas) */}
+      <img 
+        src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?w=300" 
+        style={{ 
+          position: "absolute", 
+          top: "20px", 
+          right: "20px", 
+          width: 135, 
+          height: 155, 
+          borderRadius: 28, 
+          objectFit: "cover", 
+          boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+          zIndex: 2
+        }} 
+        alt="Kaktus" 
+      />
+
+      {/* 4. Foto Cewek (Tengah Besar - Di Atas Menimpa Buah) */}
+      <img 
+        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400" 
+        style={{ 
+          position: "absolute", 
+          top: "80px", 
+          left: "155px", 
+          width: 270, 
+          height: 340, 
+          borderRadius: 40, 
+          objectFit: "cover", 
+          boxShadow: "0 12px 32px rgba(0,0,0,0.12)", 
+          zIndex: 3 // Nilai lebih tinggi dari salad makanan (zIndex: 1)
+        }} 
+        alt="Foto Cewek Kacamata" 
+      />
+
+      {/* 5. Kuas Cat (Kiri Bawah - Menimpa Lapisan Foto Cewek) */}
+      <img 
+        src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300" 
+        style={{ 
+          position: "absolute", 
+          bottom: "20px", 
+          left: "15px", 
+          width: 190, 
+          height: 220, 
+          borderRadius: 32, 
+          objectFit: "cover", 
+          boxShadow: "0 16px 36px rgba(0,0,0,0.15)",
+          zIndex: 4 // Diberikan zIndex: 4 atau tetap 3 agar menutup tepi foto cewek
+        }} 
+        alt="Kuas Cat" 
+      />
     </div>
   )}
 </section>
+
      {/* 3. FEATURE SECTION: SOCCER SEASON */}
       <section style={{ 
         background: "#fff", 
@@ -807,18 +926,18 @@ function LandingPage({
                       </svg>
                     </div>
                   </div>
-                  <p style={{ margin: "6px 0 0 0", fontSize: 11, color: "#767676", fontWeight: 400 }}>Use 8 or more letters, numbers and symbols</p>
+                  <p style={{ margin: "6px 0 0 0", fontSize: 11, color: "#767676", fontWeight: 400 }}></p>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13, fontWeight: 600, color: "#111", marginTop: 2, cursor: "pointer" }}>
+                {/* <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13, fontWeight: 600, color: "#111", marginTop: 2, cursor: "pointer" }}>
                   <span>Password tips</span>
                   <span style={{ fontSize: 12, color: "#111", fontWeight: "bold" }}>ⓘ</span>
-                </div>
+                </div> */}
 
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 6, cursor: "pointer" }}>
                     <label style={{ fontSize: 13, fontWeight: 500, color: "#111", margin: 0 }}>Birthdate</label>
-                    <span style={{ fontSize: 12, color: "#111", fontWeight: "bold" }}>ⓘ</span>
+                    <span style={{ fontSize: 12, color: "#111", fontWeight: "bold" }}></span>
                   </div>
                   <input 
                     type="text" 
@@ -1073,15 +1192,15 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-function FeedCard({ item }: { item: typeof feedItems[0] }) {
-  const [hov, setHov] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [copied, setCopied] = useState(false);
+    function FeedCard({ item }: { item: typeof feedItems[0] }) {
+      const [hov, setHov] = useState(false);
+      const [saved, setSaved] = useState(false);
+      const [copied, setCopied] = useState(false);
 
-  const handleSave = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSaved((v) => !v);
-  };
+      const handleSave = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setSaved((v) => !v);
+      };
 
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
