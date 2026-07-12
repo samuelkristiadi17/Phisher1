@@ -253,31 +253,35 @@ function LandingPage({
   };
 
   return (
-    <div style={{ background: "#fff", color: "#111", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: "hidden" }}>
-      
-     {/* 1. FIXED & STICKY NAVBAR */}
-<header style={{ 
-  display: "flex", 
-  alignItems: "center", 
-  justifyContent: "space-between", 
-  padding: isMobile ? "12px 16px" : "16px 40px", 
-  position: "fixed", 
-  top: 0, left: 0, right: 0,
-  background: "rgb(255, 255, 255)", 
-  borderBottom: "1px solid rgba(0,0,0,0.05)",
-  zIndex: 150 
-}}>
-  <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 670, fontSize: 20, color: "#e60023", cursor: "pointer", letterSpacing: "-0.5px" }}>
-      <div style={{ height: isMobile ? 24 : 32, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent" }}>
-        <img 
-          src={logo} 
-          alt="Pinterest Logo" 
-          style={{ height: isMobile ? "100%" : "72%", width: isMobile ? "auto" : "1", objectFit: "contain" }} 
-        />
-      </div>
-    </div>
-    
+    <div style={{ 
+      background: "#fff", 
+      color: "#111", 
+      fontFamily: "'Be Vietnam Pro', sans-serif", 
+      overflowX: "hidden" 
+    }}>
+        
+      {/* 1. FIXED & STICKY NAVBAR */}
+      <header style={{ 
+        display: "flex", 
+        alignItems: "center", 
+        justifyContent: "space-between", 
+        padding: isMobile ? "12px 16px" : "16px 40px", 
+        position: "fixed", 
+        top: 0, left: 0, right: 0,
+        background: "rgb(255, 255, 255)", 
+        borderBottom: "1px solid rgba(0,0,0,0.05)",
+        zIndex: 150 
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 670, fontSize: 20, color: "#e60023", cursor: "pointer", letterSpacing: "-0.5px" }}>
+            <div style={{ height: isMobile ? 24 : 32, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent" }}>
+              <img 
+                src={logo} 
+                alt="Pinterest Logo" 
+                style={{ height: isMobile ? "100%" : "72%", width: isMobile ? "auto" : "1", objectFit: "contain" }} 
+              />
+            </div>
+          </div>
     {!isMobile && (
       <>
         <span style={{ fontSize: 16, fontWeight: 600, cursor: "pointer", marginLeft: 8 }}>Explore</span>
@@ -337,7 +341,7 @@ function LandingPage({
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     ) : (
-      <button onClick={() => onNav("signup")} style={{ background: "#efefef", color: "#111", border: "none", padding: "12px 22px", borderRadius: 24, fontWeight: 700, fontSize: 15, cursor: "pointer" }}>Sign up</button>
+      <button onClick={() => onNav("#")} style={{ background: "#efefef", color: "#111", border: "none", padding: "12px 22px", borderRadius: 24, fontWeight: 700, fontSize: 15, cursor: "pointer" }}>Sign up</button>
     )}
   </div>
 </header>
@@ -984,18 +988,18 @@ function LandingPage({
       </section>
 
       {/* 6. BOTTOM FULL FOOTER */}
-      <footer style={{ 
-        background: "#000000", 
-        padding: isMobile ? "40px 24px 100px 24px" : "80px 10% 40px 10%", 
-        display: "flex", 
-        flexDirection: isMobile ? "column" : "row",
-        justifyContent: "space-between", 
-        alignItems: "flex-start", 
-        gap: isMobile ? "40px" : "0",
-        color: "#ffffff",
-        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        boxSizing: "border-box" 
-      }}>
+     <footer style={{ 
+  background: "#000000", 
+  padding: isMobile ? "40px 24px 100px 24px" : "80px 10% 40px 10%", 
+  display: "flex", 
+  flexDirection: isMobile ? "column" : "row",
+  justifyContent: "space-between", 
+  alignItems: "flex-start", 
+  gap: isMobile ? "40px" : "0",
+  color: "#ffffff",
+  fontFamily: "'Be Vietnam Pro', sans-serif", // <-- Diubah di sini
+  boxSizing: "border-box" 
+}}>
         <div style={{ 
           display: "flex", 
           flexDirection: "column", 
@@ -1356,7 +1360,16 @@ function Dashboard({ userEmail, onLogout }: { userEmail: string; onLogout: () =>
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fff", color: "#111", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", display: "flex", flexDirection: "column" }}>
+    // Ganti baris ini di dalam Dashboard:
+return (
+  <div style={{ 
+    minHeight: "100vh", 
+    background: "#fff", 
+    color: "#111", 
+    fontFamily: "'Be Vietnam Pro', sans-serif", // <-- Diubah di sini
+    display: "flex", 
+    flexDirection: "column" 
+  }}>
      {/* 1. SIDEBAR NAV (DESKTOP ONLY) */}
 {!isMobile && (
   <div style={{ width: 72, position: "fixed", top: 0, bottom: 0, left: 0, background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 0", zIndex: 110, borderRight: "1px solid #efefef" }}>
