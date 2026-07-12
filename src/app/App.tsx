@@ -1087,9 +1087,14 @@ function LandingPage({
         </div>
       )}
 
+{/* ─── ATURAN GLOBAL FONT DI SINI ─── */}
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
+        }
+        /* Memaksa seluruh elemen global menggunakan Be Vietnam Pro secara mutlak */
+        * {
+          font-family: 'Be Vietnam Pro', sans-serif !important;
         }
       `}</style>
     </div>
