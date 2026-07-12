@@ -3,6 +3,7 @@ import favicon from "../assets/favicon.png";
 import soccerVideo from "../assets/video .mp4";
 import logo from "../assets/logo.png";
 import image from "../assets/image 2.jpeg";
+import mobile from "../assets/mobile.jpeg";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIG & CONSTANTS
@@ -253,35 +254,31 @@ function LandingPage({
   };
 
   return (
-    <div style={{ 
-      background: "#fff", 
-      color: "#111", 
-      fontFamily: "'Be Vietnam Pro', sans-serif", 
-      overflowX: "hidden" 
-    }}>
-        
-      {/* 1. FIXED & STICKY NAVBAR */}
-      <header style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "space-between", 
-        padding: isMobile ? "12px 16px" : "16px 40px", 
-        position: "fixed", 
-        top: 0, left: 0, right: 0,
-        background: "rgb(255, 255, 255)", 
-        borderBottom: "1px solid rgba(0,0,0,0.05)",
-        zIndex: 150 
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 670, fontSize: 20, color: "#e60023", cursor: "pointer", letterSpacing: "-0.5px" }}>
-            <div style={{ height: isMobile ? 24 : 32, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent" }}>
-              <img 
-                src={logo} 
-                alt="Pinterest Logo" 
-                style={{ height: isMobile ? "100%" : "72%", width: isMobile ? "auto" : "1", objectFit: "contain" }} 
-              />
-            </div>
-          </div>
+    <div style={{ background: "#fff", color: "#111", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: "hidden" }}>
+      
+     {/* 1. FIXED & STICKY NAVBAR */}
+<header style={{ 
+  display: "flex", 
+  alignItems: "center", 
+  justifyContent: "space-between", 
+  padding: isMobile ? "12px 16px" : "16px 40px", 
+  position: "fixed", 
+  top: 0, left: 0, right: 0,
+  background: "rgb(255, 255, 255)", 
+  borderBottom: "1px solid rgba(0,0,0,0.05)",
+  zIndex: 150 
+}}>
+  <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 670, fontSize: 20, color: "#e60023", cursor: "pointer", letterSpacing: "-0.5px" }}>
+      <div style={{ height: isMobile ? 24 : 32, width: "auto", display: "flex", alignItems: "center", justifyContent: "center", background: "transparent" }}>
+        <img 
+          src={logo} 
+          alt="Pinterest Logo" 
+          style={{ height: isMobile ? "100%" : "72%", width: isMobile ? "auto" : "1", objectFit: "contain" }} 
+        />
+      </div>
+    </div>
+    
     {!isMobile && (
       <>
         <span style={{ fontSize: 16, fontWeight: 600, cursor: "pointer", marginLeft: 8 }}>Explore</span>
@@ -585,18 +582,24 @@ function LandingPage({
               </div>
             </div>
 
-            {/* Kolom Kanan */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, height: 120, borderRadius: 16, overflow: "hidden", background: "#efefef" }}>
-                  <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=150" style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
-                  <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150" style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
-                  <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=150" style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
-                </div>
-                <p style={{ margin: "6px 0 2px", fontSize: 12, fontWeight: 700, color: "#111" }}>Sporty hairstyles</p>
-                <p style={{ margin: 0, fontSize: 11, color: "#767676" }}>Beauty • 1mo</p>
-              </div>
+       {/* Kolom Kanan */}
+<div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+  <div>
+    {/* gridTemplateColumns diubah jadi 1fr agar 1 gambar memenuhi kotak */}
+    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 2, height: 120, borderRadius: 16, overflow: "hidden", background: "#efefef" }}>
+      
+      {/* Kode gambar yang sudah diubah sesuai permintaan Anda */}
+      <img 
+        src={mobile} 
+        alt="mobile" 
+        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+      />
+      
+    </div>
+    <p style={{ margin: "6px 0 2px", fontSize: 12, fontWeight: 700, color: "#111" }}>Sporty hairstyles</p>
+    <p style={{ margin: 0, fontSize: 11, color: "#767676" }}>Beauty • 1mo</p>
+  </div>
+
               <div>
                 <div style={{ height: 160, background: "#efefef", borderRadius: 16, overflow: "hidden" }}>
                   <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=300" style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
@@ -961,7 +964,7 @@ function LandingPage({
                 OR
               </div>
 
-              <button onClick={() => onNav("#")} style={{ width: "100%", padding: "12px", border: "1.5px solid #cdcdd1", borderRadius: 50, background: "#fff", fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, cursor: "pointer", marginBottom: 16, color: "#111" }}>
+              <button onClick={() => onNav("signup")} style={{ width: "100%", padding: "12px", border: "1.5px solid #cdcdd1", borderRadius: 50, background: "#fff", fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, cursor: "pointer", marginBottom: 16, color: "#111" }}>
                 <svg width="20" height="20" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -988,18 +991,18 @@ function LandingPage({
       </section>
 
       {/* 6. BOTTOM FULL FOOTER */}
-     <footer style={{ 
-  background: "#000000", 
-  padding: isMobile ? "40px 24px 100px 24px" : "80px 10% 40px 10%", 
-  display: "flex", 
-  flexDirection: isMobile ? "column" : "row",
-  justifyContent: "space-between", 
-  alignItems: "flex-start", 
-  gap: isMobile ? "40px" : "0",
-  color: "#ffffff",
-  fontFamily: "'Be Vietnam Pro', sans-serif", // <-- Diubah di sini
-  boxSizing: "border-box" 
-}}>
+      <footer style={{ 
+        background: "#000000", 
+        padding: isMobile ? "40px 24px 100px 24px" : "80px 10% 40px 10%", 
+        display: "flex", 
+        flexDirection: isMobile ? "column" : "row",
+        justifyContent: "space-between", 
+        alignItems: "flex-start", 
+        gap: isMobile ? "40px" : "0",
+        color: "#ffffff",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        boxSizing: "border-box" 
+      }}>
         <div style={{ 
           display: "flex", 
           flexDirection: "column", 
@@ -1087,14 +1090,9 @@ function LandingPage({
         </div>
       )}
 
-{/* ─── ATURAN GLOBAL FONT DI SINI ─── */}
       <style>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
-        }
-        /* Memaksa seluruh elemen global menggunakan Be Vietnam Pro secara mutlak */
-        * {
-          font-family: 'Be Vietnam Pro', sans-serif !important;
         }
       `}</style>
     </div>
@@ -1365,16 +1363,7 @@ function Dashboard({ userEmail, onLogout }: { userEmail: string; onLogout: () =>
   ];
 
   return (
-    // Ganti baris ini di dalam Dashboard:
-return (
-  <div style={{ 
-    minHeight: "100vh", 
-    background: "#fff", 
-    color: "#111", 
-    fontFamily: "'Be Vietnam Pro', sans-serif", // <-- Diubah di sini
-    display: "flex", 
-    flexDirection: "column" 
-  }}>
+    <div style={{ minHeight: "100vh", background: "#fff", color: "#111", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", display: "flex", flexDirection: "column" }}>
      {/* 1. SIDEBAR NAV (DESKTOP ONLY) */}
 {!isMobile && (
   <div style={{ width: 72, position: "fixed", top: 0, bottom: 0, left: 0, background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px 0", zIndex: 110, borderRight: "1px solid #efefef" }}>
