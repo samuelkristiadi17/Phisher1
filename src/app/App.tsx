@@ -1048,7 +1048,7 @@ function LandingPage({
             <span style={{ cursor: "pointer", fontSize: "14px", color: "#ffffff", fontWeight: 400 }}>Shop</span>
             <span style={{ cursor: "pointer", fontSize: "14px", color: "#ffffff", fontWeight: 400 }}>Users</span>
             <span style={{ cursor: "pointer", fontSize: "14px", color: "#ffffff", fontWeight: 400 }}>Collections</span>
-            <span style={{ cursor: "pointer", fontSize: "14px", color: "#ffffff", fontWeight: 400 }}>Shopping</span>
+            {/* <span style={{ cursor: "pointer", fontSize: "14px", color: "#ffffff", fontWeight: 400 }}>Shopping</span> */}
             <span style={{ cursor: "pointer", fontSize: "14px", color: "#ffffff", fontWeight: 400 }}>Help Center</span>
           </div>
 
