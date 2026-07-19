@@ -1582,13 +1582,28 @@ export default function App() {
             boxShadow: isMobile ? "none" : "0 20px 60px rgba(0,0,0,.4)",
             overflowY: "auto"
           }}>
-            {/* Tombol Tutup Modal X */}
-            <button 
-              onClick={() => setShowLogin(false)} 
-              style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#767676", zIndex: 30 }}
-            >
-              ✕
-            </button>
+       {/* Tombol Tutup Modal X */}
+<button  
+  onClick={() => setShowLogin(false)}  
+  style={{ 
+    position: "absolute", 
+    top: isMobile ? 24 : 16, // Lebih turun ke bawah pada versi mobile sesuai foto
+    right: isMobile ? 24 : 16, // Memberikan space yang seimbang dari kanan
+    background: "none", 
+    border: "none", 
+    fontSize: isMobile ? 28 : 24, // Sedikit lebih besar pada mobile agar mudah ditekan
+    cursor: "pointer", 
+    color: "#5f5f5f", // Warna abu-abu yang lebih pas sesuai contoh foto
+    zIndex: 30,
+    padding: 4,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif"
+  }}
+>
+  ✕
+</button>
 
             {/* SISI KIRI / UTAMA: FORM FIELD */}
             <div style={{ 
