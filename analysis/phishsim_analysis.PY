@@ -1,8 +1,5 @@
 import pandas as pd                  # Data Analysis
 import matplotlib.pyplot as plt      # Data Visualization
-import matplotlib.patches as mpatches # Plot Shapes
-import seaborn as sns                # Statistical Plotting
-import numpy as np                   # Numerical Computing
 from collections import Counter      # Frequency Counting
 import warnings                      # Warning Handling
 from matplotlib.gridspec import GridSpec # Plot Layout
@@ -129,7 +126,6 @@ fig.suptitle('PhishSim — Hasil Analisis Kuesioner Similarity Analyzer',
 
 # Menentukan warna yang digunakan pada grafik
 colors_teal = '#1A5E57'
-colors_red = '#E60023'
 palette = ['#1A5E57', '#2E8B84', '#D0EBEA', '#F4A261', '#E76F51']
 
 # Mengatur posisi dan ukuran setiap grafik
