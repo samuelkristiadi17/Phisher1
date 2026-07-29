@@ -203,19 +203,8 @@ ax5.set_title('Potensi Tertipu jika Tidak\nMengetahui Simulasi', fontweight='bol
 plt.savefig('phishsim_analysis_charts.png', dpi=150, bbox_inches='tight')
 print("\n→ Chart disimpan sebagai: phishsim_analysis_charts.png")
 
-# EXPORT KE EXCEL
-
-# Mengekspor hasil analisis ke beberapa sheet Excel
-with pd.ExcelWriter('phishsim_analysis_report.xlsx', engine='openpyxl') as writer:
-    df.to_excel(writer, sheet_name='Raw Data', index=False)
-    stats.to_excel(writer, sheet_name='Statistik Kemiripan Visual')
-    q2_summary.to_excel(writer, sheet_name='Q2 Familiar Pinterest')
-    q8_summary.to_excel(writer, sheet_name='Q8 Kesadaran Phishing')
-    element_df.to_excel(writer, sheet_name='Q9 Elemen Mencurigakan', index=False)
-    q10_summary.to_excel(writer, sheet_name='Q10 Potensi Tertipu')
 
 # Menampilkan lokasi hasil export
-print("→ Laporan Excel disimpan sebagai: phishsim_analysis_report.xlsx")
 print("\n" + "=" * 60)
 print("ANALISIS SELESAI")
 print("=" * 60)
